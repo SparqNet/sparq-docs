@@ -24,7 +24,7 @@ subgraph "Subnet"
 end
 
 sb1 --> gRPC
-t1 <-."async".-> gRPC
+t1 <--"async"--> gRPC
 ```
 
 ## Para saber mais...
