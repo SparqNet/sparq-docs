@@ -2,12 +2,12 @@
 
 A estrutura do blockchain do Sparq é composta pela interação entre os seguintes componentes:
 
-* Transação (**Tx::Base** - `utils/transaction`)
-* Bloco (**Block** - `core/block`)
-* Blockchain (**ChainHead** - `core/chainHead`)
-* Mempool (**ChainTip** - `core/chainTip`)
-* **BlockManager** (`core/blockmanager`) (TODO: cachola do Ita)
-* **Validator** (`core/blockmanager`)
+* Transação (**Tx::Base** em `utils/transaction`)
+* Bloco (**Block** em `core/block`)
+* Gerenciador de Blocos (**BlockManager** em `core/blockmanager`)
+* Nó Validador (**Validator** em `core/blockmanager`)
+* Mempool (**ChainTip** em `core/chainTip`)
+* Blockchain (**ChainHead** em `core/chainHead`)
 
 Nota do redator (Supra): os nomes são confusos pra quem tá vindo de fora, sinceramente eu buscaria renomear o quanto antes pra ficar consistente:
 - **Tx::Base** podia virar só **Tx**, o bagulho é literalmente uma classe dentro de um namespace que não tem NADA a não ser essa uma classe
@@ -53,11 +53,28 @@ Um bloco contém os seguintes dados:
 * Número de transações inclusas no bloco *e* número de transações do Validator
 * Lista de transações inclusas no bloco *e* lista de transações do Validator
 
+## Gerenciador de Blocos (BlockManager)
+
+A classe BlockManager gerencia a criação e congestão de blocos.
+
+TODO: sinceramente isso aqui tá mais na cachola do Ita, além de que algumas coisas não estão muito claras:
+
+- "BlockManager is also considered a contract, but remains part of the core protocol of Sparq"- ???
+- BlockManager possui funções de validação de bloco (`validateBlock()`), mas isso tecnicamente não é função do Validator?
+
+## Nó Validador (Validator)
+
+A classe Validator é uma abstração de um nó validador. Um Validator é um nó que valida os blocos e suas transações vindas da rede.
+
+TODO: isso aqui também tá mais na cachola do Ita, falta documentação a mais sobre o que/como o Validator faz
+
 ## Blockchain (ChainHead)
 
-A classe ChainHead é uma abstração do blockchain propriamente dito.
+A classe ChainHead é uma abstração do blockchain propriamente dito. Mantém blocos aprovados e validados.
 
 O blockchain do Sparq mantém um histórico de até 1000 blocos mais recentes na memória, enquanto os blocos mais antigos vão sendo periodicamente salvos numa database interna.
+
+A classe tambem possui vários `std::unordered_map`s para consulta e cache de blocos e transações.
 
 TODO: talvez melhorar os detalhes aqui, existem escolhas obscuras de design que não foram bem explicadas como:
 
@@ -65,6 +82,7 @@ TODO: talvez melhorar os detalhes aqui, existem escolhas obscuras de design que 
 
 ## Mempool (ChainTip)
 
-A classe ChainTip é uma abstração do que seria a mempool.
+A classe ChainTip é uma abstração do que seria a mempool. Mantém blocos novos e/ou em processamento, aprovando-os ou rejeitando-os de acordo com as regras de consenso.
 
-TODO: continuar isso aqui depois
+Ao chegar num consenso sobre um bloco, ele é automaticamente apagado da mempool, migrando antes para o ChainHead se tiver sido aprovado.
+
