@@ -7,7 +7,7 @@ A inicialização é feito pelo membro da classe *subnet->start*, que por sua ve
 Para exemplificar melhor considere o seguinte fluxograma:
 
 ```mermaid
-flowchart LR
+flowchart TB
 
 subgraph gRPC
     av1["*async* AvalancheGo daemon's calls"]
