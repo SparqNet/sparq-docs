@@ -30,5 +30,3 @@ t1 <--"async"--> gRPC
 ## Para saber mais...
 
 Visite [**esse documento**](../core/subnet.md) com as relações da classe base do Subnet e outros diagramas.
-
-Documento mantido por: [GabrielVilarinho](https://github.com/GabrielVilarinho) e [Jean-Lessa](https://github.com/Jean-Lessa)
