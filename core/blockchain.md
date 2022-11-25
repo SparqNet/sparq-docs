@@ -4,12 +4,12 @@ A estrutura do blockchain do Sparq é composta pela interação entre os seguint
 
 * Transação (**Tx::Base** em `utils/transaction`)
 * Bloco (**Block** em `core/block`)
-* Gerenciador de Blocos (**BlockManager** em `core/blockmanager`)
 * Nó Validador (**Validator** em `core/blockmanager`)
+* Gerenciador de Blocos (**BlockManager** em `core/blockmanager`)
 * Mempool (**ChainTip** em `core/chainTip`)
 * Blockchain (**ChainHead** em `core/chainHead`)
 
-Nota do redator (Supra): os nomes são confusos pra quem tá vindo de fora, sinceramente eu buscaria renomear o quanto antes pra ficar consistente:
+TODO: Nota do redator (Supra): os nomes são confusos pra quem tá vindo de fora, sinceramente eu buscaria renomear o quanto antes pra ficar consistente:
 - **Tx::Base** podia virar só **Tx**, o bagulho é literalmente uma classe dentro de um namespace que não tem NADA a não ser essa uma classe
 - **ChainHead** podia virar só **Chain** ou **Blockchain**
 - **ChainTip** podia virar **Mempool** (porque é literalmente o que a bagaça é)
@@ -20,20 +20,23 @@ A classe Tx::Base é uma abstração da estrutura de uma transação. A lógica 
 
 Uma transação contém os seguintes dados:
 
-* Endereço de destino (também chamado de "to")
-* (Opcional) Endereço de remessa (também chamado de "from")
-* Valor da transação em sua menor unidade (e.g. "satoshi", "wei", etc. - "100000000" em satoshi seria 1.0 BTC)
-* (Opcional) Campo de dados arbitrários (data)
-* Identificação única do blockchain onde a transação é feita (também chamado de "chainId")
-* Número da transação feita pelo endereço de remessa (nonce - começa com 0)
-  * No contexto de uma transação, um nonce "4" por exemplo indicaria que essa é a quinta transação feita por tal endereço
-* Gas Limit (ou somente "Gas" - limite máximo de unidades de gas que a transação irá gastar, em Wei - e.g. "21000")
+* **to** - Endereço de destino
+* **from** (opcional) - Endereço de remessa
+* **value** - Valor da transação em sua menor unidade
+  * e.g. "satoshi", "wei", etc. - "100000000" em satoshi seria 1.0 BTC, "5000000000" em wei seria 0.000000005 ETH (ou 5 gwei)
+* **data** (opcional) - Campo de dados arbitrários, geralmente usado em contratos
+* **chainId** - Identificação única do blockchain onde a transação é feita
+  * e.g. "43114" = Avalanche C-Chain, "43113" = Avalanche Fuji Testnet
+* **nonce** - Número da transação feita pelo endereço de remessa (nonce - começa com 0)
+  * Começa sempre no 0, isso quer dizer que um nonce "4" por exemplo indicaria que essa é a *quinta* transação feita por tal endereço
+* **gas** (também chamado de "Gas Limit") - limite máximo de unidades de gas que a transação irá gastar, em Wei (e.g. "21000")
   * Caso a transação gaste mais do que isso, ela automaticamente falha, o valor original da transação se mantém, mas o que já foi gasto de gas é perdido
-* Gas Price (valor pago para cada unidade de gas, em Gwei - "e.g. 15 = 15000000000 Wei")
-  * O valor total da taxa da transação é calculado como (gas * gas price) - e.g. 21000 * 15000000000 = 0.000315 ETH
-* Assinatura ECDSA (Elliptic Curva Digital Signature Algorithm) para validação da integridade da transação
-  * Dividida em 3 partes: **v** (ID de recuperação - 1 byte), **r** (primeira metade - 32 bytes) e **s** (segunda metade - 32 bytes)
-  * Bytes são em formato hexadecimal, logo "32 bytes" seriam "64 caracteres" se convertidos
+* **gasPrice** - valor pago para cada unidade de gas, em Gwei (e.g. "15" = 15000000000 Wei)
+  * O valor total da taxa da transação é calculado como (gas * gasPrice) - e.g. 21000 * 15000000000 = 0.000315 ETH
+* Assinatura ECDSA (Elliptic Curva Digital Signature Algorithm) para validação da integridade da transação, dividida em 3 partes:
+  * **v** - ID de recuperação (1 byte hex)
+  * **r** - primeira metade da assinatura ECDSA (32 bytes hex)
+  * **s** - segunda metade da assinatura ECDSA (32 bytes hex)
 
 TODO: conferir com o Ita se os opcionais e o cálculo do gas estão corretos
 
@@ -53,30 +56,35 @@ Um bloco contém os seguintes dados:
 * Número de transações inclusas no bloco *e* número de transações do Validator
 * Lista de transações inclusas no bloco *e* lista de transações do Validator
 
-## Gerenciador de Blocos (BlockManager)
-
-A classe BlockManager gerencia a criação e congestão de blocos.
-
-TODO: sinceramente isso aqui tá mais na cachola do Ita, além de que algumas coisas não estão muito claras:
-
-- "BlockManager is also considered a contract, but remains part of the core protocol of Sparq"- ???
-- BlockManager possui funções de validação de bloco (`validateBlock()`), mas isso tecnicamente não é função do Validator?
-
 ## Nó Validador (Validator)
 
 A classe Validator é uma abstração de um nó validador. Um Validator é um nó que valida os blocos e suas transações vindas da rede.
 
 TODO: isso aqui também tá mais na cachola do Ita, falta documentação a mais sobre o que/como o Validator faz
 
+## Gerenciador de Blocos (BlockManager)
+
+A classe BlockManager gerencia a criação, congestão e validação de blocos.
+
+O processo é feito por meio de uma lista interna de Validators, dos quais um é escolhido para criar o bloco e os outros validam o mesmo por meio de assinaturas.
+
+TODO: sinceramente isso aqui tá mais na cachola do Ita, além de que algumas coisas não estão muito claras:
+
+- "BlockManager is also considered a contract, but remains part of the core protocol of Sparq"- ???
+- A escolha dos Validators é realmente aleatória? O código não diz muito
+- `processBlock()` tá implementado no ChainTip mas não aqui (code cruft?????)
+
 ## Blockchain (ChainHead)
 
 A classe ChainHead é uma abstração do blockchain propriamente dito. Mantém blocos aprovados e validados.
 
-O blockchain do Sparq mantém um histórico de até 1000 blocos mais recentes na memória, enquanto os blocos mais antigos vão sendo periodicamente salvos numa database interna.
+Ao iniciar a Subnet, o ChainHead carrega na memória um histórico de até 1000 transações mais recentes de uma database interna. Caso não hajam blocos (ou seja, o blockchain acabou de ser implantado e iniciado pela primeira vez), um bloco genesis é automaticamente criado e carregado na memória.
+
+Ao atingir o limite de 1000 blocos recentes na memória, ou depois de certo tempo, os blocos antigos são periodicamente salvos na database. Isso mantém o blockchain leve no uso de memória e extremamente responsivo.
 
 A classe tambem possui vários `std::unordered_map`s para consulta e cache de blocos e transações.
 
-TODO: talvez melhorar os detalhes aqui, existem escolhas obscuras de design que não foram bem explicadas como:
+TODO: existem escolhas obscuras de design que não foram bem explicadas como:
 
 - A lista interna dos blocos é um `std::deque` (uma fila que dá pra inserir e remover das duas pontas) - eu não lembro o por que o Ita fez assim
 
