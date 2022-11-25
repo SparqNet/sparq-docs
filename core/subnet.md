@@ -4,65 +4,66 @@
 
 Conforme descrito anteriormente no [arquivo ponto de entrada](../src/main.md) a finalidade da classe Subnet é encapsular e redirecionar os módulos dos Nodes onde a Subnet atuará como um intermediador para remediar a lentidão apresentada em redes convencionais de block-chain, atualmente a comunicação dos Nodes é dependente das VM (Virtual Machines, mais em [AvalancheGo](https://github.com/ava-labs/avalanchego/tree/master/vms)) da [AvaLabs](https://www.avalabs.org/), e até o momento é discutido uma ferramenta in-house para a substituição das Virtual Machines, contanto esteja ciente que esse e outros documentos terão uma revisão referente a implementação ou desenvolvimento das ferramentas citadas.
 
-
 ### O Papel do AvalancheGO Daemon
 
-A Subnet utiliza um serviço gRPC na criação da Virtual Machine que servirá como Rede Principal para os Nodes, a própria VM Local faz a leitura da saída do terminal em "``std::cout << "1|19|tcp|" << server_address << "|grpc\n" << std::flush;``" e faz a propagação do IP para os Nodes que estão sendo executados em paralelo (pelo comando ``scripts/AIO-setup.sh``).
+A AvalancheGo e nossa Subnet se comunicam pelo serviço gRPC para se comunicar com os nodes, o mesmo é uma Virtual Machine executando o binário Subnet (Subnetooor*) que servirá como Rede Principal para os Nodes, a própria VM Local faz a leitura da saída do terminal em "``std::cout << "1|19|tcp|" << server_address << "|grpc\n" << std::flush;``" e faz a propagação do IP para os Nodes que estão sendo executados em paralelo (pelo comando ``scripts/AIO-setup.sh``), além disso, o AvalancheGo adiciona a Subnet (Subnetoor*) a lista de chains disponíveis.
 
-De acordo com a [*documentação*](https://docs.avax.network/subnets/create-a-local-subnet) do AvaLabs cada alocação gera as block-chain; X-Chain, P-Chain e C-Chain, e cada "Chain" com suas aplicações e contratos em execução, o papel do AvalancheGO Daemon é de uma Rede Principal Local onde os Nodes façam a conexão com a Subnet desejada fora da rede e internamente as solicitações são validadas, o grande diferencial da nossa Subnet das demais implementações (Avalanche's Subnets por exemplo***teoricamente* seria quando ocorre o intermédio da nossa Subnet no encapsulamento dos processos? Supreme me ajuda pf.**
+De acordo com a [*documentação*](https://docs.avax.network/subnets/create-a-local-subnet) do AvaLabs cada alocação gera as block-chain; X-Chain, P-Chain e C-Chain, e cada "Chain" com suas aplicações e contratos em execução, o papel do AvalancheGO Daemon é de uma Rede Principal Local onde os Nodes façam a conexão com a Subnet desejada fora da rede e internamente as solicitações são validadas.
 
 ```mermaid
-flowchart TB
-
-subgraph A[Public Network 5a5b6e]
-    s1_n("Node 1")
-    s1_nX("X-Chain")
-    s1_nP("P-Chain")
-    s1_nC("C-Chain")
-    s1((Subnet))
-    s1_ad("AvalancheGo Daemon 1")
-
-    s1_nX --> s1_n
-    s1_nP --> s1_n
-    s1_nC --> s1_n
-    s1_n --> s1
-    s1 --> s1_ad
+flowchart LR
+label1["AvalancheGo BlackBox"]
+label2["AvalancheGo BlackBox"]
+label3["AvalancheGo BlackBox"]
+subgraph A[AvalancheGo 5a5b6e]
+    aX("X-Chain")
+    aP("P-Chain")
+    aC("C-Chain")
+    as1(Subnet)
+    subgraph ad1["Node 1"]
+        label1
+    end
+    aX <-.gRPC.-> ad1
+    aP <-.gRPC.-> ad1
+    aC <-.gRPC.-> ad1
+    as1 <-.gRPC.-> ad1
 end
 
-subgraph B[Public Network a80982]
-    s2_n("Node 2")
-    s2_nX("X-Chain")
-    s2_nP("P-Chain")
-    s2_nC("C-Chain")
-    s2((Subnet))
-    s2_ad("AvalancheGo Daemon 2")
-  
-    s2_nX --> s2_n
-    s2_nP --> s2_n
-    s2_nC --> s2_n
-    s2_n --> s2
-    s2 --> s2_ad
+subgraph B[AvalancheGo a80982]
+    bX("X-Chain")
+    bP("P-Chain")
+    bC("C-Chain")
+    bs1(Subnet)
+    subgraph bd1["Node 2"]
+        label2
+    end
+    bX <-.gRPC.-> bd1
+    bP <-.gRPC.-> bd1
+    bC <-.gRPC.-> bd1
+    bs1 <-.gRPC.-> bd1
 end
 
-subgraph C[Public Network abd4a3]
-    s3_n("Node 3")
-    s3_nX("X-Chain")
-    s3_nP("P-Chain")
-    s3_nC("C-Chain")
-    s3((Subnet))
-    s3_ad("AvalancheGo Daemon 3")
-  
-    s3_nX --> s3_n
-    s3_nP --> s3_n
-    s3_nC --> s3_n
-    s3_n --> s3
-    s3 --> s3_ad
+subgraph C[AvalancheGo abd4a3]
+    cX("X-Chain")
+    cP("P-Chain")
+    cC("C-Chain")
+    cs1(Subnet)
+    subgraph cd1["Node 3"]
+        label3
+    end
+    cX <-.gRPC.-> cd1
+    cP <-.gRPC.-> cd1
+    cC <-.gRPC.-> cd1
+    cs1 <-.gRPC.-> cd1
 end
 
-
-grpc[gRPC connection]
-s1_ad <---> grpc
-s2_ad <---> grpc
-s3_ad <---> grpc
-
+A <-.?? Network Connection ??.-> B
+B <-.?? Network Connection ??.-> C
+C <-.?? Network Connection ??.-> A
 ```
+
+**_Nota:_**  Extrair mais informações do Itamar.
+
+### Por que AvalancheGo?
+
+Um dos pré-requisitos a serem satisfeitos no início do projeto foi a implementação do próprio AvalancheGo, grande feito que surgiu impacto no escopo do projeto más também beneficiou a imagem pública do projeto.
