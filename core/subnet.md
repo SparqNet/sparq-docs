@@ -1,8 +1,17 @@
 # Arquivo core/subnet.md
 
-### Objetivo do Objeto Subnet
+### Sumário
 
-**_TODO_**
+* **Sobre o Objeto**
+* **O Papel do AvalancheGo Daemon**
+* **Por que AvalancheGo?**
+* **Inicialização**
+* **Métodos do objeto Subnet**
+* **Protocol Buffer e gRPC**
+* **Desligamento**
+* **Referências**
+
+**_TODO:_** Sempre atualizar o Sumário com os tópicos mais recentes
 
 ### Sobre o objeto Subnet
 
@@ -68,8 +77,46 @@ B <-.?? Network Connection ??.-> C
 C <-.?? Network Connection ??.-> A
 ```
 
-**_Nota:_**  Extrair mais informações do Itamar.
+**_Nota:_** Extrair mais informações do Itamar.
 
 ### Por que AvalancheGo?
 
 Um dos pré-requisitos a serem satisfeitos no início do projeto foi a implementação do próprio AvalancheGo, grande feito que surgiu impacto no escopo do projeto más também beneficiou a imagem pública do projeto.
+
+### Inicialização
+
+Após a inicialização das VMs do AvalancheGo temos 60 segundos até a inicialização do binário da Subnet (Subnatooor), pois assim que o tempo limite (60 segundos) for atingido todas as VMs irão receber uma solicitação cURL para o registro da blockChain na rede AvalancheGo.
+
+**cURL em AIO_Setup.sh:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "platform.createBlockchain",
+  "params" : {
+      "subnetID"   : "'$SUBNET_ID'",
+      "vmID"       : "'$SUBNET_ID'",
+      "name"       : "Subnetooor",
+      "genesisData": "0x68656c6c6f776f726c648f8f07af",
+      "username"   : "'$USERNAME'",
+      "password"   : "'$PASSWORD'"
+  },
+  "id": 1
+}
+```
+
+Esse tempo limite ocorre porque é um pré-requisito das VMs que sejam "configuradas", isto é receber na rede principal a solicitação de registro do Node Intermediário pelo método ```platform.createBlockchain``` e logo em seguida a inicialização do ```Subnet::start``` do nosso binário com a saída da porta do serviço pelo terminal.
+
+**_Atenção_**: Cada Virtual Machine do AvalancheGo está executando uma cópia de Subnetoord, verifique o arquivo **_debug.txt_** de cada VM em **_$GO_DIRECTORY/src/github.com/ava-labs/avalanchego/node{n}_** para os logs do binário de cada Virtual Machine, o mesmo arquivo se encontra no diretório do projeto para os logs do binário local.
+
+### Métodos do objeto Subnet
+**_TODO:_** escrever esse tópico.
+
+### Protocol Buffer e gRPC
+**_TODO:_** escrever esse tópico.
+
+### Desligamento
+**_TODO:_** escrever esse tópico.
+
+### Referências
+**_TODO:_** escrever esse tópico.
