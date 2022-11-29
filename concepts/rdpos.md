@@ -19,7 +19,55 @@ Por exemplo, no chain do Bitcoin, supondo que há um bloco "latest" que possui o
 
 Os chains do Bitcoin e similares seguem a regra do "longest lived chain" (o chain maior, ou seja, com maior prova de trabalho acumulada, é o chain principal), porém rollbacks introduzem problemas com essa regra. Por exemplo, ao criar DApps onde o desenvolvedor tem que lidar com essas condições especiais, o que pode dar mais trabalho dependendo do tamanho/complexidade da aplicação.
 
-TODO: flowchart aqui
+```mermaid
+flowchart LR
+
+C1[C]
+B1[B]
+A1[A]
+
+A2[A]
+B2[B]
+C2[C]
+D2[D]
+E2[E]
+
+A3[A]
+B3[B]
+C3[C]
+D3[D]
+E3[E]
+
+subgraph graphB
+    direction BT
+    A2 --> B2
+    B2 ~~~ C2
+    D2 --> E2
+    B2 ~~~ D2
+end
+subgraph graphA
+    direction BT
+    A1 --> B1
+    B1 --> C1
+end
+subgraph graphC
+    direction BT
+    AI[ ] ~~~ BI[ ]
+    BI[ ] ~~~ C3
+    C3 ~~~ EI[ ]
+    A3 --> B3
+    B3 --> D3
+    D3 --> E3
+
+    %% invisiveis
+    style AI fill:#FFFFFF00, stroke:#FFFFFF00;
+    style BI fill:#FFFFFF00, stroke:#FFFFFF00;
+    style EI fill:#FFFFFF00, stroke:#FFFFFF00;
+end
+
+graphA --> graphB
+graphB --> graphC
+```
 
 No caso do diagrama acima, o bloco C foi substituído pelo bloco D seguido do E, fazendo rollback das transações feitas no bloco C.
 
