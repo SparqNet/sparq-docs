@@ -129,8 +129,7 @@ Além disso, a Subnet armazena no struct ```InitializeRequest``` as informaçõe
 
 ### Sobre DB
 
-As Subnets foram feitas para rodar no modo ```sandbox```, pois não podemos criar nossa propria base de dados, até o momento utilizamos o banco de dados que o AvalancheGo providencia para através do gRPC Client. As informações são armazenadas por um par de valores <Chave/Valor>, similár com LevelDB ou IndexedDB, apesar de limitado nos permite escrever em lote e realizar a leitura dos dados de acordo com a tabela abaixo.
-
+As informações são armazenadas por um par de valores <Chave/Valor> dentro do DB, utilizando LevelDB, a única limitação presente é a estrutura dos dados que deve ser idêntica ao AvalancheGo, para a escrita e leitura dos registros armazenados na base de dados é necessário o acompanhamento da tabela abaixo.
 
 | Prefixo | Tipo de Dado | Comportamento | Valor                   |
 | ------- | ------------ | ------------- | ----------------------- |
@@ -162,15 +161,15 @@ O 'Chain Tip' é similar ao 'Chain Head', porém ele realiza o rastreamento dos 
 
 ### Sobre o Block Manager
 
-**_TODO:_** Perguntar pro itamar pq ta confuso... é contrato? como e oq validador zé?
+**_TODO:_** Aguardando documentação do Itamar
 
 ### Sobre o P2PManager
 
-Work in progress.
+O serviço de ponta-a-ponta 'P2PManager' é feito por web-sockets, esse serviço é responsável pela propagação de transações e informações do bloco processado para as demais Subnets (Subnatooor).
 
 ### Sobre o HttpServer
 
-Standalone HttpServer?
+O 'HttpServer' disponibiliza uma conexão direta para serviços dos frameworks web (Web3, ethers, etc) como MetaMask, CoinBase e Frame.
 
 ## Métodos do objeto Subnet
 
