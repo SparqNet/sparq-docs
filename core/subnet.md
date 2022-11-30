@@ -7,7 +7,7 @@
 * **Por que AvalancheGo?**
 * **Pre-inicialização**
 * **Inicialização**
-* **Métodos do objeto Subnet**
+* **Membros da classe Subnet**
 * **Protocol Buffer e gRPC**
 * **Desligamento**
 * **Referências**
@@ -131,6 +131,7 @@ Além disso, a Subnet armazena no struct ```InitializeRequest``` as informaçõe
 
 As informações são armazenadas por um par de valores <Chave/Valor> dentro do DB, utilizando LevelDB, a única limitação presente é a estrutura dos dados que deve ser idêntica ao AvalancheGo, para a escrita e leitura dos registros armazenados na base de dados é necessário o acompanhamento da tabela abaixo.
 
+
 | Prefixo | Tipo de Dado | Comportamento | Valor                   |
 | ------- | ------------ | ------------- | ----------------------- |
 | 0001    | Key          | Block Hash    | Block                   |
@@ -171,7 +172,102 @@ O serviço de ponta-a-ponta 'P2PManager' é feito por web-sockets, esse serviço
 
 O 'HttpServer' disponibiliza uma conexão direta para serviços dos frameworks web (Web3, ethers, etc) como MetaMask, CoinBase e Frame.
 
-## Métodos do objeto Subnet
+## Membros da classe Subnet
+
+Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicialização**' a _Rede Principal_ solicita de forma assíncrono diversos métodos relacionados ao estado do Block-chain (veja **_proto/vm.proto_** para mais detalhes), seja para perguntar se ambos estão em sinergia ou solicitações ao validador de bloco. A seguir a implementação das demais funcionalidades que a rede pode solicitar.
+
+### Subnet: SetState
+
+Quando um Node finaliza o ```Subnet::initialize``` a _Rede Principal_ solicita a qual o Hash do último bloco processado, e com base no Hash do Block é verificado se houve um 'branching' de blocos processados, caso ocorrer 'branching' o mesmo é elimidado da sincronização e marcado como _não confiável_ resultando no fechamento de conexão, do contrário a conexão continua estabelecida e o Node pode solicitar a Rede Principal (por meio do ```grpcClient```) o próximo bloco até que não haja mais a necessidade.
+
+Novos blocos são recebidos também pelo SetState, diferente da sincronização por esse método é emitido (Broadcast) a todos os Nodes.
+
+**_Atenção:_** Comportamento descrito é apenas o esperado de **setState**, por hora quando o AvalancheGo solicita setState retornamos apenas as informações do último bloco, vale ressaltar que a Rede Principal pode solicitar se o Node têm habilitado a sincronização por State ```StateSyncEnabled``` que se encontra desativado, fazendo com que a Rede Principal faça a sincronização pelos canais **_parseBlock_** e **_acceptBlock_** (observe a funcionalidade de **_parseBlock_** e **_acceptBlock_** que se condiz com a sincronização de blocos).
+
+### Subnet: ParseBlock
+
+A _Rede Principal_ irá solicitar a análise do bloco enviado ao Node, se ele faz parte do 'Chain Head' ou 'Chain Tip', se encontrado independente de ter sido rejeitado ou adicionado ao 'Chain Head' e suas condições sendo:
+
+1. Em duas ocorrências pode retornar **_verdadeiro_**, a primeira quando já foi processada anteriormente, e a segunda quando é adicionado ao 'Chain Tip' para processamento.
+2. A única ocorrência de retornar **_falso_** nesse estágio é quando ocorre uma excessão causada pelo 'Chain Tip'.
+
+### Condição 1.
+
+Verificação de se o Bloco já se encontra presente no 'Chain Head' ou em 'Chain Tip':
+
+```mermaid
+
+flowchart LR
+
+MN1(("Main Network"))
+MN2(("Main Network"))
+
+MN1 --"c7c316..."--> A
+
+A["Block 'c7c316...'\n"]
+
+IF1{"Is in Chain Head \nor Chain Tip?"}
+
+C1["ChainTip::processBlock"]
+R1["Yes"]
+R2["No"]
+ERR["Exception"]
+subgraph SG1["Node 1."]
+    subgraph PS1["parseBlock"]
+        A --> IF1
+        IF1 --> R1
+        IF1 --> R2
+        R2 --> C1
+        C1 --> ERR
+    end
+end
+C1 --"return true"--> MN2
+R1 --"return true"--> MN2
+ERR --"return false"--> MN2
+
+```
+
+### Condição 2.
+
+Verificando se o Bloco é menor ou o mesmo que o ultimo bloco adicionado pelo 'Chain Head':
+
+```mermaid
+flowchart LR
+
+MN1(("Main Network"))
+MN2(("Main Network"))
+
+MN1 --"d0c93f..."--> A
+
+A["Block 'd0c93f...'\n"]
+
+IF1{"Block number \n>\n Latest Block number"}
+
+C1["ChainTip::processBlock"]
+R1["Yes"]
+R2["No"]
+R3["BlockStatus::Rejected"]
+ERR["Exception"]
+subgraph SG1["Node 1"\n.]
+    subgraph PS1["parseBlock"]
+        A --> IF1
+        IF1 --> R2
+        IF1 --> R1
+        R1 --> C1
+        R2 --> R3
+        C1 --> ERR
+    end
+end
+C1 --"return true"--> MN2
+ERR --> R3
+R3 --"return false"--> MN2
+```
+
+### Subnet: acceptBlock
+
+Nos arquivos de fonte do AvalancheGo e em **_proto/vm.proto_** é solicitado
+n tem
+parse --> accept
 
 **_TODO:_** escrever esse tópico.
 
