@@ -3,9 +3,9 @@
 Este é um "Rosetta Stone" das funções do Utils e como usá-las para facilitar a vida de quem estiver programando no Sparq.
 
 * [Debugando por meio de print nos logs](#debugando-por-meio-de-print-nos-logs)
-* [Conversão de tipos](#conversao-de-tipos)
+* [Conversão de tipos](#conversão-de-tipos)
 * [A classe StringContainer](#a-classe-stringcontainer)
-* [Manipulação de endereços](#manipulacao-de-enderecos)
+* [Manipulação de endereços](#manipulação-de-endereços)
 
 ## Debugando por meio de print nos logs
 
