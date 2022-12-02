@@ -8,9 +8,7 @@
 * **Pre-inicialização**
 * **Inicialização**
 * **Membros da classe Subnet**
-* **Protocol Buffer e gRPC**
 * **Desligamento**
-* **Referências**
 
 **_TODO:_** Sempre atualizar o Sumário com os tópicos mais recentes
 
@@ -262,23 +260,58 @@ C1 --"return true"--> MN2
 ERR --> R3
 R3 --"return false"--> MN2
 ```
+**_Atenção:_** Não rejeitamos Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise. 
 
 ### Subnet: acceptBlock
 
-Nos arquivos de fonte do AvalancheGo e em **_proto/vm.proto_** é solicitado
-n tem
-parse --> accept
+O método ```Subnet::acceptBlock``` recebe da _Rede Principal_ o Hash correspondente a um bloco que está presente no 'Chain Tip', sua solicitação significa que o bloco está pronto para ser adicionado ao 'Chain Head', a rede AvalancheGo nunca deverá enviar outro bloco para ser aceito com o mesmo 'Number Height', se ocorrer acontecerá um erro de excessão não controlado.
 
-**_TODO:_** escrever esse tópico.
+### Subnet: rejectBlock
 
-## Protocol Buffer e gRPC
+Essa chamada é utilizada pela _Rede Principal_ para rejeitar um bloco enviado posteriormente ao 'Chain Tip'.
 
-**_TODO:_** escrever esse tópico.
+### Subnet: setPreference
+
+A _Rede Principal_ envia a Hash do bloco disposto na 'Chain Tip' que ainda não foi processado e define como "preferido", isto é o melhor candidato de ser adicionado ao 'Chain Head'. 
+
+### Subnet: validateTransaction
+
+Realiza a validação de uma transação, sua implementação diz respeito ao arquivo **_proto/vm.proto_**, essa "fofoca" diz respeito a perguntar para outros nodes se a transação é valida para ser emitida, antes de propagar as informações é verificado se a conta têm saldo, se o 'nonce' é valido e se a transação não se encontra na 'memory pool'.
+
+**_Atenção_**: Essa movimentação da transação ao 'memory pool' não altera o 'State' do programa (consulte o arquivo de definição **_state.h_** para saber oque altera o estado da aplicação). 
+
+### Subnet: verifyBlock
+
+Faz a validação das transações do bloco, se o Hash do novo bloco têm como bloco anterior o último bloco da 'Chain Head', se sua altura númérica está sequenciada, e se a assinatura do bloco é coerente ao validador primário na lista de Nodes conectados.
+
+Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip', e o Subnet (Subnatooor) retorna ```Status: Ok```.
+
+### Subnet: getAncestors
+
+Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida até o bloco mais recente.
+
+### Subnet: getBlock
+
+Retorna um bloco se ele existir na 'Chain Head' ou no 'Chain Tip', se o bloco já se encontra na 'Chain Head' retorna ```Status: Accepted```, se o bloco se encontra na 'Chain Tip' a situação pode ser ```Status: Unknown | Processing | Rejected```, do contrário o bloco não foi encontrado.
+
+### Subnet: blockRequest
+
+Cria um novo bloco quando há um bloco candidato em 'Chain Tip' (consulte **_setPreference_**).
+
+### Subnet: connectNode
+
+Guarda a conexão de um Node, esse método pode ser chamado também pela _Rede Principal_.
+
+### Subnet: disconnectNode
+
+Remove um Node da lista de Node conectados.
 
 ## Desligamento
 
-**_TODO:_** escrever esse tópico.
+Similar a inicialização o desligamento é iniciado pela AvalancheGo, esse procedimento ocorre em ```Subnet::stop``` que é executado quando a AvalancheGo envia ```rpc Shutdown(args)```, o processo é realizado na sequencia:
 
-## Referências
-
-**_TODO:_** escrever esse tópico.
+1. Escrever o conteúdo de 'Chain Head' da memória para a base de dados.
+2. Escrever o conteúdo de 'State' da memória para a base de dados.
+3. Desligar a base de dados.
+4. Desligar o 'HttpServer'.
+5. Desligamento total com o método ```Subnet::shutdownServer```.
