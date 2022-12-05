@@ -168,9 +168,7 @@ Caso o range saia do escopo (out of range), não há retorno.
 
 ## 0x0006 - NewBestBlock
 
-Propaga um novo "melhor bloco"/último bloco para a rede.
-
-TODO: explicar isso melhor depois - "melhor bloco" e "bloco mais recente" são a mesma coisa? Se não mandar o Ita definir isso de uma vez pra ficar consistente
+Propaga um novo "melhor bloco" para a rede (mesma coisa que "bloco mais recente").
 
 Envio:
 
