@@ -127,8 +127,10 @@ Além disso, a Subnet armazena no struct ```InitializeRequest``` as informaçõe
 
 ### Sobre DB
 
-As informações são armazenadas por um par de valores <Chave/Valor> dentro do DB, utilizando LevelDB, a única limitação presente é a estrutura dos dados que deve ser idêntica ao AvalancheGo, para a escrita e leitura dos registros armazenados na base de dados é necessário o acompanhamento da tabela abaixo.
+As informações são armazenadas por um par de valores <Chave/Valor> dentro do DB, utilizando LevelDB, a 
+'scheme database' atual é herdada das versões anteriores que se comunicava diretamente ao AvalancheGo. 
 
+A escrita e leitura dos registros armazenados na base de dados é necessário o acompanhamento da tabela abaixo.
 
 | Prefixo | Tipo de Dado | Comportamento | Valor                   |
 | ------- | ------------ | ------------- | ----------------------- |
@@ -176,7 +178,7 @@ Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicia
 
 ### Subnet: SetState
 
-Quando um Node finaliza o ```Subnet::initialize``` a _Rede Principal_ solicita a qual o Hash do último bloco processado, e com base no Hash do Block é verificado se houve um 'branching' de blocos processados, caso ocorrer 'branching' o mesmo é elimidado da sincronização e marcado como _não confiável_ resultando no fechamento de conexão, do contrário a conexão continua estabelecida e o Node pode solicitar a Rede Principal (por meio do ```grpcClient```) o próximo bloco até que não haja mais a necessidade.
+Quando um Node finaliza o ```Subnet::initialize``` a _Rede Principal_ verifica se o Node está sincronizado, se não estiver o mesmo envia o 'State' da chain, isso inclui informações sobre balanço, contrato e afins.
 
 Novos blocos são recebidos também pelo SetState, diferente da sincronização por esse método é emitido (Broadcast) a todos os Nodes.
 
@@ -260,7 +262,9 @@ C1 --"return true"--> MN2
 ERR --> R3
 R3 --"return false"--> MN2
 ```
-**_Atenção:_** Não rejeitamos Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise. 
+**_Atenção ¹:_** Não rejeitamos Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
+
+**_Atenção ²:_** ParseBlock **não realiza verificação da lógica das transações**, apenas se as assinaturas são validas.
 
 ### Subnet: acceptBlock
 
@@ -276,7 +280,7 @@ A _Rede Principal_ envia a Hash do bloco disposto na 'Chain Tip' que ainda não 
 
 ### Subnet: validateTransaction
 
-Realiza a validação de uma transação, sua implementação diz respeito ao arquivo **_proto/vm.proto_**, essa "fofoca" diz respeito a perguntar para outros nodes se a transação é valida para ser emitida, antes de propagar as informações é verificado se a conta têm saldo, se o 'nonce' é valido e se a transação não se encontra na 'memory pool'.
+Faz a validação de uma transação, exclusivo apenas para Nodes da Subnet (Subnetooor), é verificado se a conta têm saldo, se o 'nonce' é valido e se a transação não se encontra na 'memory pool'.
 
 **_Atenção_**: Essa movimentação da transação ao 'memory pool' não altera o 'State' do programa (consulte o arquivo de definição **_state.h_** para saber oque altera o estado da aplicação). 
 
