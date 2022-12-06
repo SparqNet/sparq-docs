@@ -26,7 +26,7 @@ Verifica se a assinatura do bloco é válida, se sua ordem/sequencia está corre
 
 ### State: processNewBlock
 
-Processa o novo bloco e atualiza o 'State', esse método é chamado apenas pela 'Chain Tip' quando a rede solicita que um bloco será aceito (Consulte ```Subnet::acceptBlock``` [*aqui*]("subnet.md#L269")).
+Processa o novo bloco e atualiza o 'State', esse método é chamado apenas pela 'Chain Tip' quando a rede solicita que um bloco será aceito (Consulte ```Subnet::acceptBlock``` [aqui](subnet.md)).
 
 ### State: createNewBlock
 
