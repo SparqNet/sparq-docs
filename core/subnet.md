@@ -262,7 +262,7 @@ C1 --"return true"--> MN2
 ERR --> R3
 R3 --"return false"--> MN2
 ```
-**_Atenção ¹:_** Não rejeitamos Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
+**_Atenção ¹:_** Não é rejeitado Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
 
 **_Atenção ²:_** ParseBlock **não realiza verificação da lógica das transações**, apenas se as assinaturas são validas.
 
