@@ -6,7 +6,7 @@ O objetivo do objeto 'State' é de representar o estado das contas, transações
 
 ## Initialização
 
-O 'State' recebe tanto o acesso da base de dados (DB) quanto um ```grpcClient``` para comunicar com o AvalancheGo, por exemplo. Comunicar ao AvalancheGo que o Node não está mais processando um bloco.
+O 'State' recebe tanto o acesso da base de dados (DB) quanto um ```grpcClient``` para comunicar com o AvalancheGo, por exemplo. Solicitar ao AvalancheGo um novo bloco.
 
 ## Membros da classe State
 
@@ -22,7 +22,7 @@ Recupera o número de transação da conta fornecida.
 
 ### State: validateNewBlock
 
-Verifica se a assinatura do bloco é válida, se sua ordem/sequencia está correta com o 'Chain Head', se foi adicionada na 'memory pool', e se não se encontra em 'Chain Tip'.
+Verifica se o bloco dado como argumento é um bloco valido para dar continuidade na blockchain, checando as assinaturas, transações e outras informações obrigatorias do bloco.
 
 ### State: processNewBlock
 
@@ -34,7 +34,7 @@ Cria um bloco a partir do melhor candidato em 'Chain Tip' quando as seguintes co
 
 1. Existir um candidato em 'Chain Tip' selecionado pela rede.
 2. Existir o Hash do bloco em 'Chain Tip'.
-3. Existir um bloco correspondente ao Hash em 'Chain Head' já na lista de 'cachedBlocks'.
+3. Existir um bloco correspondente ao Hash na 'Block-Chain'.
 
 Se qualquer condição acima falhar será retornado ```nullptr```, e a operação será cancelada.
 
