@@ -1,16 +1,16 @@
-# Arquivo core/chainTip.md
+# ChainTip
 
-## Sobre o ChainTip
+O objetivo do ChainTip é de realizar operações relacionadas aos blocos recebidos pela _Rede Principal_, nela é contido informações como o melhor bloco, se um bloco está sendo processado, aceitado ou rejeitado.
 
-O objetivo do 'Chain Tip' é de realizar operações relacionadas aos blocos recebidos pela _Rede Principal_, nela é contido informações como o melhor bloco, se um bloco está sendo processado, aceitado ou rejeitado.
+Essencialmente o ChainTip age que nem uma espécie de "mempool" - quando um bloco chega num consenso (ou seja, sai do estado de "processamento" e entra ou no estado de "aceito" ou "rejeitado"), ele não mais permanece no ChainTip e é devidamente descartado (caso rejeitado) ou migrado para o ChainHead (caso aceito).
 
-A 'Chain Tip' não pode aceitar um bloco que já foi recepcionado anteriormente, essa regra se aplica a todas as situações que um bloco pode estar, e para que isso não ocorra é guardado na lista ```cachedBlockStatus <Hash,BlockStatus, SafeHash>``` a situação de todos os blocos recebidos.
+O ChainTip não pode aceitar um bloco que já foi recepcionado anteriormente, essa regra se aplica a todas as situações que um bloco pode estar, e para que isso não ocorra é guardado na lista ```cachedBlockStatus <Hash,BlockStatus, SafeHash>``` a situação de todos os blocos recebidos.
 
-## Initialização
+## Inicialização
 
-Sem construtor, initialização normal em ```Subnet::initialize``` a partir de um ponteiro.
+Sem construtor, inicialização normal em ```Subnet::initialize``` a partir de um ponteiro.
 
-## Membros da classe Chain Tip
+## Membros da classe ChainTip
 
 Os membros desta classe podem ou não manipular as variáveis ```Hash preferedBlockHash```, ```unordered_map<Hash, Block*, SafeHash> internalChainTip``` e ```unordered_map<Hash, BlockStatus, SafeHash> cachedBlockStatus```, e apenas essas variaveis.
 
