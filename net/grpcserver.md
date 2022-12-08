@@ -2,7 +2,7 @@
 
 ## Sobre o objeto grpcServer
 
-O objeto 'grpcServer' têm o objetivo principal de receber as solicitações da _Rede Principal_ do AvalancheGo, a comunicação entre o Node e a rede é feita pelo mecanismo [**'Protocol Buffers'**](https://developers.google.com/protocol-buffers) do Google e [GRPC], as mensagens são recepcionadas a partir da implementação dos métodos de ```VMServiceImplementation``` que retornam pacotes esperados pela VM.
+O objeto 'grpcServer' têm o objetivo principal de receber as solicitações da _Rede Principal_ do AvalancheGo, a comunicação entre o Node e a rede é feita pelo mecanismo [**'Protocol Buffers'**](https://developers.google.com/protocol-buffers) do Google e [gRPC](https://grpc.io/), as mensagens são recepcionadas a partir da implementação dos métodos de ```VMServiceImplementation``` que retornam pacotes esperados pela VM.
 
 Esta classe não inicializa nenhuma solicitação direta ao AvalancheGo, apesar de algumas solicitações darem inicio a processos que podem solicitar o AvalancheGo diretamente (veja grpcClient para mais informações sobre solicitar dados ao AvalancheGo).
 
@@ -10,7 +10,7 @@ Exemplos de ```VMServiceImplementation``` e redirecionamento da rede podem ser e
 
 **_Atenção:_** A estrutura de como é trafegado as solicitações podem ser encontradas em **vm.proto**.
 
-## Initialização
+## Inicialização
 
 É Inicializado em ```Subnet::start``` e seu construtor recebe apenas o ponteiro da classe ```Subnet```, após o Node terminar o processo de inicialização do mesmo, é emitido em terminal o IP e Porta no trecho ```std::cout << "1|20|tcp|" << server_address << "|grpc\n" << std::flush;``` para que a máquina virtual capture e registre a subnet.
 
@@ -20,7 +20,7 @@ Todos os membros desta classe correspondem a implementação de ```VMServiceImpl
 
 ### grpcServer: Initialize
 
-Quando a _Rede Principal_ solicita este método significa que o Node faz parte da rede, e que a inicialização seja finalizada. 
+Quando a _Rede Principal_ solicita este método significa que o Node faz parte da rede, e que a inicialização seja finalizada.
 
 ### grpcServer: SetState
 
@@ -37,7 +37,7 @@ Quando a _Rede Principal_ solicita este método significa que o Node faz parte d
 }
 ```
 
-Apesar da citação acima o sistema não possue suporte para esta solicitação, em toda via retorna o bloco mais recente.
+Apesar da citação acima o sistema não possuí suporte para esta solicitação, em toda via retorna o bloco mais recente.
 
 ### grpcServer: BuildBlock
 
@@ -55,11 +55,11 @@ Solicita se o 'StateSync' está habilitado, por padrão é retornado ```true```.
 
 ### grpcServer: SetPreference
 
-Ajusta a preferência (ou melhor candidáto) do bloco presente em 'Chain Tip', posteriormente o **_acceptBlock_** irá dar início a adição do bloco ao 'Chain Head' (veja [core/chainTip.md](../core/chainTip.md) no método _setPreference_).
+Ajusta a preferência (ou melhor candidato) do bloco presente em 'Chain Tip', posteriormente o **_acceptBlock_** irá dar início a adição do bloco ao 'Chain Head' (veja [core/chainTip.md](../core/chainTip.md) no método _setPreference_).
 
 ### grpcServer: Version
 
-Retorna a versão da 'Block-chain' que o Node pode ser representado, qualquer valor abritário de versionamento não retorna erros ou incompatibilidade.
+Retorna a versão da 'Block-chain' que o Node pode ser representado, qualquer valor arbitrário de versionamento não retorna erros ou incompatibilidade.
 
 ### grpcServer: GetBlock
 
@@ -71,7 +71,7 @@ Retorna uma lista de blocos baseando-se nos critérios de 'depth', 'size' e 'tim
 
 ### grpcServer: BlockVerify
 
-A _rede principal_ envia um bloco ao Node, se o bloco fazer parte da sequencia será adicionado ao 'Chain Tip' (veja [core/subnet.md](../core/subnet.md) no método _verifyBlock_).
+A _rede principal_ envia um bloco ao Node, se o bloco fazer parte da sequência será adicionado ao 'Chain Tip' (veja [core/subnet.md](../core/subnet.md) no método _verifyBlock_).
 
 ### grpcServer: BlockAccept
 
@@ -83,7 +83,7 @@ Marca um bloco já presente na 'Chain Tip' com ```BlockStatus::rejected```.
 
 ### grpcServer: BatchedParseBlock
 
-Realiza o processo de 'ParseBlock' na sequencia que os blocos foram enviados pela _Rede Principal_.
+Realiza o processo de 'ParseBlock' na sequência que os blocos foram enviados pela _Rede Principal_.
 
 ### grpcServer: Connected
 
