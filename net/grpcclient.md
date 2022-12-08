@@ -10,7 +10,7 @@ O 'grpcClient' implementa as ‘interfaces’ de **_aliasreader.proto_**, **_app
 
 ## Membros da classe
 
-Essa classe só possúi um membro de classe, e suas variáveis correspondem às 'interfaces' apesar do sistema não realizar todas as chamadas que o "servidor" do AvalancheGo atende.
+Essa classe só possui um membro de classe, e suas variáveis correspondem às 'interfaces' apesar do sistema não realizar todas as chamadas que o "servidor" do AvalancheGo atende.
 
 ### grpcClient: requestBlock
 
