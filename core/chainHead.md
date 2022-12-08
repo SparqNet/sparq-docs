@@ -4,11 +4,11 @@
 
 A 'Chain Head' ou 'Cabeçalho da Chain' é representada por uma coleção de registros dos blocos, onde transações, contratos, e contas são armazenados nos blocos criados pela própria _Rede Principal_, outros Nodes ou ele mesmo, esses registros não podem ser alterados e estão ali apenas para leitura/consulta.
 
-A gravação de novos registros é feito pelos processos da classe 'Chain Tip' (consulte [chainTip](chainTip.md) para mais detalhes), de forma simplificada recebemos novas transações da rede, conjunto de Nodes ou do próprio Node.
+A gravação de novos registros é feito pelos processos da classe 'Chain Tip' (consulte [chainTip](chainTip.md) para mais detalhes), de forma simplificada recebemos novos blocos (contendo transações), e guardamos eles.
 
-É feito a leitura dos registros é feita em diversos lugares do sistema, pode-se afirmar que o 'Chain Head' junto do 'DB' são o ponto final de todas as operações realizadas no ecossistema.
+A leitura dos registros é feita em diversos lugares do sistema, pode-se afirmar que o 'Chain Head' junto do 'DB' são o ponto final do historico das operações realizadas no ecossistema.
 
-## Initialização
+## Inicialização
 
 O 'chainHead' recebe a instância da base de dados ```DBService dbServer```, durante a inicialização do Node em ```Subnet::initialize```, onde é descarregado todos os registros armazenados em uma inicialização anterior, se a base de dados (DB) estiver vazia é criado o ```Block genesis``` com validadores de teste local.
 
