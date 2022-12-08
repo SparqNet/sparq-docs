@@ -1,6 +1,6 @@
 # Arquivo core/chainHead.md
 
-## Sobre o ChainHead
+## Sobre o objeto ChainHead
 
 A 'Chain Head' ou 'Cabeçalho da Chain' é representada por uma coleção de registros dos blocos, onde transações, contratos, e contas são armazenados nos blocos criados pela própria _Rede Principal_, outros Nodes ou ele mesmo, esses registros não podem ser alterados e estão ali apenas para leitura/consulta.
 

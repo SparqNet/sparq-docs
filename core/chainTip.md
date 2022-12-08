@@ -1,4 +1,6 @@
-# ChainTip
+# Arquivo core/chainTip.md
+
+## Sobre o objeto ChainTip
 
 O objetivo do ChainTip é de realizar operações relacionadas aos blocos recebidos pela _Rede Principal_, nela é contido informações como o melhor bloco, se um bloco está sendo processado, aceitado ou rejeitado.
 
