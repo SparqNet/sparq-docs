@@ -1,0 +1,62 @@
+# Database
+
+Como a subnet, até o momento de escrita desse documento, está rodando dentro de um sandbox e fazendo interface com a VM do AvalancheGo, não é possível usar uma database própria. É preciso usar a database providenciada pelo AvalancheGo via gRPC.
+
+A database em si é uma simples database de chaves (keys) e valores (values), similar ao [LevelDB](https://github.com/google/leveldb) da Google (inclusive usando o mesmo internamente), mas com modificações que permitem uma escrita e leitura em lote (batch) usando uma estrutura lógica baseada em prefixos.
+
+## Estrutura da database
+
+A database em si possui os seguinte prefixos:
+
+```
+0001 -- Key: Block Hash | Value: Block
+0002 -- Key: Block nHeight | Value: Block Hash
+0003 -- Key: Tx Hash | Value: Transactions
+0004 -- Key: Address | Value: Native Balance + nNonce
+0005 -- ERC20 Tokens/State
+0006 -- ERC721 Tokens/State
+0007 -- Key: Tx Hash | Value: Block Hash
+```
+
+Tais prefixos são concatenados no começo da *chave*, logo uma entrada que teria, por exemplo, uma chave "abc" e um valor "123", caso fosse inserida no prefixo "0003", teria a seguinte forma dentro da database: `{"0003abc": "123"}`
+
+## Como manipular a database
+
+Na nossa ponta, existe um namespace `DBPrefix` para referenciar cada prefixo de forma mais simples:
+
+```
+0001 = DBPrefix::blocks
+0002 = DBPrefix::blockHeightMaps
+0003 = DBPrefix::transactions
+0004 = DBPrefix::nativeAccounts
+0005 = DBPrefix::erc20Tokens
+0006 = DBPrefix::erc721Tokens
+0007 = DBPrefix::TxToBlocks
+0008 = DBPrefix::validators
+```
+
+Também existem três structs:
+
+* `DBServer` - struct que contém o host e a versão da database a ser conectada
+* `DBEntry` - struct que contém uma entrada a ser inserida ou lida pela database, possui apenas dois membros: key e value, ambos strings
+* `WriteBatchRequest` - struct que contém múltiplos `DBEntry`s para serem inseridos e/ou deletados de uma vez só
+
+TODO: eu não lembro se o struct DBKey ainda existe, talvez isso mude no futuro ou não, deixando anotado pra não esquecer de ver depois
+
+## A classe DBService e seus membros
+
+A classe que contém a abstração da database em si e suas operações se chama `DBService`, que pede um caminho do sistema de arquivos no seu construtor para ser instanciada, sendo a database aberta (caso exista) ou criada na hora (caso não exista) ao chamar o construtor. Para fechar a database é necessário chamar o método `DBService::close`.
+
+Além de utilizar as estruturas acima, possui internamente um ponteiro para um objeto `leveldb::DB` e uma série de funções membros que abstraem as principais operações CRUD do LevelDB:
+
+* `DBService::has` - checa se uma chave existe em um dado prefixo da database
+* `DBService::get` - pega um valor de uma chave dentro de um dado prefixo da database, se existir
+* `DBService::put` - insere uma chave e um valor dentro de um dado prefixo da database
+  * Devido à forma como o LevelDB funciona, um "update"/atualizar uma entrada é o mesmo que inserir um valor diferente numa chave que já existe
+* `DBService::del` - deleta uma chave de um dado prefixo da database
+* `DBService::writeBatch` - versão "em lote" do `put` + `del`
+  * A função requer um struct `WriteBatchRequest`, logo todas as operações contidas nele serão feitas de uma vez só
+* `DBService::readBatch` - mesma coisa que o `get`, mas retorna *todas* as entradas de um dado prefixo da database
+  * Essa função possui dois overloads - o primeiro retorna todas as entradas apenas com o prefixo como parâmetro, e o segundo permite retornar apenas entradas com chaves específicas dando uma lista de chaves como parâmetro extra
+* `DBService::removeKeyPrefix` - função helper que remove o prefixo de uma chave (e.g. a chave "0003abc" com o valor "123", ao passar nessa função retornaria como "abc")
+

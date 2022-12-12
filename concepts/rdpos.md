@@ -39,30 +39,38 @@ D3[D]
 E3[E]
 
 subgraph graphB
-    direction BT
+direction BT
     A2 --> B2
-    B2 ~~~ C2
+    B2 --- C2
     D2 --> E2
-    B2 ~~~ D2
+    B2 --- D2
+    
+    linkStyle 1 stroke-width:0, fill:none;
+    linkStyle 3 stroke-width:0, fill:none;
 end
 subgraph graphA
-    direction BT
+direction BT
     A1 --> B1
     B1 --> C1
 end
 subgraph graphC
     direction BT
-    AI[ ] ~~~ BI[ ]
-    BI[ ] ~~~ C3
-    C3 ~~~ EI[ ]
+    AI[ ] --- BI[ ]
+    BI[ ] --- C3
+    C3 --- EI[ ]
     A3 --> B3
     B3 --> D3
     D3 --> E3
-
-    %% invisiveis
+    
     style AI fill:#FFFFFF00, stroke:#FFFFFF00;
     style BI fill:#FFFFFF00, stroke:#FFFFFF00;
     style EI fill:#FFFFFF00, stroke:#FFFFFF00;
+    
+    
+    linkStyle 6 stroke-width:0, fill:none;
+    linkStyle 7 stroke-width:0, fill:none;
+    linkStyle 8 stroke-width:0, fill:none;
+    
 end
 
 graphA --> graphB
