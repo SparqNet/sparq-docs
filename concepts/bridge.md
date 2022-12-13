@@ -1,68 +1,65 @@
 # Sparq Bridging
 
-The biggest problem in using our tools/SDK to create your own Subnet/DAPP chain is that it is not as flexible as VM's chains, you are not able to easily deploy new contracts to the chain, for example, imagine that you have set up a triple AAA DAPP chain that uses NFT's for its game, but your chain doesn't have an NFT Marketplace for your game, what now? You would need a mandatory network update to implement such a marketplace. Due to the decentralized nature of blockchains, this could take days or even weeks until the marketplace is fully active and heavily damage the reputation of your project.
+As explained in [Overview.md](Overview.md#the-caveats-and-solution), compared to EVM chains, there are inherent flexibility problems with **native** and **application-specific** Subnets or DApp chains, which could heavily damage the reputation of a project built on them, and our solution is to natively allow Sparq-enabled blockchains to natively communicate with each other by using the Sparq Network as a middleman for the communication, which we call *bridging*.
 
-Our solution is to natively allow Sparq-enabled Blockchains to natively "read/write" into each other by using the Sparq Network as a middleman for the communication.
+Conceptually it should be possible to bridge *arbitrary data* and *tokens*, both *between Sparq nodes* and *between Sparq and external networks*.
 
-### Arbitrary data Sparq <-> Sparq Bridging
+## Sparq <-> Sparq Data Bridging
 
-Bridging from a Sparq Subnet (A) to another Sparq Subnet (B) is simple.
+Bridging data from a Sparq Subnet (A) to another (B) is simple:
 
-- firstly, Subnet A writes the requests to the next block and relays the request with the block reference to the Sparq Network
+* A writes a request to the next block and relays the request with the block reference to the Sparq Network:
 
 ![DataRequest](img/DataRequest.png)
 
-
-- Then, the randomly selected validators/sentinels (using RandomGen) check the request on Subnet A and request the data to Subnet B
-
+* The randomly selected Validators and Sentinels (using `RandomGen`) check A's request and relay it to B:
 
 ![SparqNetDataRequest](img/SparqNetDataRequest.png)
 
-
-- Subnet B publishes the answer data within its blockchain and inside a merkled item, then sends the Sparq Network the published data and the reference for it within its blockchain to be permanently stored.
+* B gathers the data within its blockchain inside a merkled item, then sends it and its reference within its own blockchain to the Sparq Network to be permanently stored:
 
 ![SendAnswerToSparqNet](img/SendAnswerToSparqNet.png)
 
-
-- Validators and Sentinels checks the data sent by Subnet B against other nodes of Subnet B to ensure that the data is inside that given block.
+* Validators and Sentinels check the data sent by B against other nodes of B to ensure that the data is inside that given block:
 
 ![SparqNetVerfiyBlock](img/SparqNetVerifyBlock.png)
 
-- Validators and Sentinels signs the data and publish them inside the SparqNet network, besides also relaying it back to Subnet A
+* Validators and Sentinels sign the data and publish it inside the Sparq Network, while also relaying it back to A:
 
-![SendAnswerToSubnet](img/SendAnswerToSubnet.png))
+![SendAnswerToSubnet](img/SendAnswerToSubnet.png)
 
-- Subnet A verifies the signatures made on the answer, checks if the randomly selected nodes were using the network RandomGen
+* A verifies the signatures and checks if the randomly selected nodes were using the network's `RandomGen` seed.
 
-### Token Sparq <-> Sparq Bridging
+## Sparq <-> Sparq Token Bridging
 
-The same method for Arbitrary data is used for token bridging, but there are extra checkups to guarantee that a given Subnet is not simply minting another Subnet token while bridging.
+The same method for arbitrary data bridging is used for token bridging, but there are extra checkups to guarantee that a given Subnet is not simply minting another Subnet's token while bridging.
 
-Due to the design of the system, we can only ensure that "data exists" not that "data is valid in context" when doing a cross-chain transaction, by doing that, it allows a given Subnet to mint the native token of another Subnet when trying to do a cross-chain transaction because the SparqNet does not verify if the token is valid inside that network.
+Due to the system's design, when doing a cross-chain transaction we can only ensure that the data *exists*, not that it is *valid in context*. That breach allows a given Subnet to mint the native token of another Subnet when trying to do a cross-chain transaction, because the Sparq Network does not verify if the token is valid inside that network.
 
-We avoid this problem by keeping a token table of the Subnets, a token table is a simple "spreadsheet" of the subnets and their token balance, except for the Subnet native token, because the Subnet itself has the rights of minting freely his token (minting of it's token requires checks within its Subnet), we don't need to keep it.
+We avoid this problem by keeping a "token table" of the Subnets. A token table is a simple "spreadsheet" of the subnets and their token balance, except for the given Subnet's native token, because the Subnet itself can freely mint its own token and that still requires checks within itself, so we don't need to keep it on the table.
 
-For example, we have Subnet A, B, and C, each one with tokens of another one, where the Sparq Network keeps track of:
+For example, we have Subnet A, B, and C, each one with tokens of each other, where the Sparq Network keeps track of:
 
--  How many B/C's exist on A
--  How many A/C's exist on B
--  How many A/B's exist on C
+-  How many B's and C's exist on A
+-  How many A's and C's exist on B
+-  How many A's and B's exist on C
 
-When bridging another Subnet's token, the Sparq Network verifies if that Subnet has enough balance to bridge, when bridging your own token, it will only increase the balance on the target Subnet because, for the "exit" transaction from your Subnet to be valid in the Sparq Network, it has to be included in one of your blocks, which means it has been verified inside your network which validates the minting transactions of your token.
+When bridging another Subnet's tokens, the Sparq Network verifies if that Subnet has enough balance to bridge. When bridging your own tokens, the Sparq Network only has to increase the balance on the target Subnet, since the `exit` transaction from your Subnet has to be included in one of your blocks, which means it has been verified and validated inside your own network, thus there's no need to verify and validate it again from the outside.
 
 Sparq <-> Sparq Bridge follows mint/burn mechanisms.
 
-### External Network Bridging (Ethereum, Solana, Etc)
+## Sparq <-> External Bridging (Ethereum, Solana, etc.)
 
-Due to the limited processing power of these networks (Ethereum, for example), the current implementation for the bridging is Centralized and owned by Sparq Labs Inc.
+Due to the limited processing power of these networks, the current bridging implementation for them is centralized and owned by Sparq Labs Inc..
 
 Sparq <-> External bridge follows lock/release mechanisms.
 
+## How is safety ensured?
 
-### How is safety ensured?
+The nodes that will read from a given Subnet are determined using `RandomGen`, the trustless decentralized randomness generator developed by Sparq Labs Inc..
 
-The nodes selected to read from a given Subnet are determined using RandomGen, the trustless decentralized randomness generator developed by Sparq Labs Inc. Read rdPoS to understand more about it.
+We ensure to keep a "fair" selection of nodes, but even then there is the possibility of a 51% attack. For example, if a given malicious user has 50 nodes on the network, and the network has a total of 100 nodes, and all of the malicious user nodes get selected for driving a cross-chain request and a block, they could collude and forward any message they wanted.
 
-By that, we ensure to keep a "fair" selection of nodes, but even, there is the possibility of a 51% attack, for example, if a given malicious user has 50 nodes on the network and the network has a total of 100 nodes, and all of the malicious user gets selected for driving a cross-chain request and a block, they could collude and forward any message.
+We avoid this by introducing Sentinels to the network. Sentinels are Sparq Labs powered Validators that ensure this collusion doesn't happen. Sentinels are not able to create new blocks, but rather work together with Validators to drive the network forward.
 
-We avoid this by introducing Sentinels to the network, Sentinels are Sparq Labs powered Validators that help to ensure that collusion does not happen, Sentinels are not able to push new blocks, but rather work together with Validators to drive the network forward, read rdPoS for more information.
+More details on [rdpos.md](rdpos.md).
