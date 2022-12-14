@@ -178,11 +178,9 @@ Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicia
 
 ### Subnet: SetState
 
-Quando um Node finaliza o ```Subnet::initialize``` a _Rede Principal_ verifica se o Node está sincronizado, se não estiver o mesmo envia o 'State' da chain, isso inclui informações sobre balanço, contrato e afins.
+De acordo com o código fonte do AvalancheGo que implementa **_proto/vm.proto_**, esse método é chamado quando a _Rede Principal_ precisa sinalizar qual a situação que a rede se encontra (veja [net/grpcserver.md](../net/grpcserver.md) para o ID dos estados).
 
-Novos blocos são recebidos também pelo SetState, diferente da sincronização por esse método é emitido (Broadcast) a todos os Nodes.
-
-**_Atenção:_** Comportamento descrito é apenas o esperado de **setState**, por hora quando o AvalancheGo solicita setState retornamos apenas as informações do último bloco, vale ressaltar que a Rede Principal pode solicitar se o Node têm habilitado a sincronização por State ```StateSyncEnabled``` que se encontra desativado, fazendo com que a Rede Principal faça a sincronização pelos canais **_parseBlock_** e **_acceptBlock_** (observe a funcionalidade de **_parseBlock_** e **_acceptBlock_** que se condiz com a sincronização de blocos).
+**_Atenção_**: Atualmente não implementado devido implementação recente por parte da Avalabs.
 
 ### Subnet: ParseBlock
 
