@@ -290,7 +290,7 @@ Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip'.
 
 ### Subnet: getAncestors
 
-Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida até o bloco mais recente.
+Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida (usando a posição do bloco fornecido) até o bloco mais recente.
 
 ### Subnet: getBlock
 
