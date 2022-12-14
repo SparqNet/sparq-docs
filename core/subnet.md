@@ -286,7 +286,7 @@ Faz a validação de uma transação, exclusivo apenas para Nodes da Subnet (Sub
 
 Faz a validação das transações do bloco, se o Hash do novo bloco têm como bloco anterior o último bloco da 'Chain Head', se sua altura númérica está sequenciada, e se a assinatura do bloco é coerente ao validador primário na lista de Nodes conectados.
 
-Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip', e o Subnet (Subnatooor) retorna ```Status: Ok```.
+Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip'.
 
 ### Subnet: getAncestors
 
