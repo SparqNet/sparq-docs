@@ -178,7 +178,7 @@ Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicia
 
 ### Subnet: SetState
 
-De acordo com o código fonte do AvalancheGo que implementa **_proto/vm.proto_**, esse método é chamado quando a _Rede Principal_ precisa sinalizar qual a situação que a rede se encontra (veja [net/grpcserver.md](../net/grpcserver.md) para o ID dos estados).
+Conforme o código-fonte do AvalancheGo que implementa **_proto/vm.proto_**, esse método é chamado quando a _Rede Principal_ precisa sinalizar qual a situação que a rede se encontra (veja [net/grpcserver.md](../net/grpcserver.md) para o ID dos estados).
 
 **_Atenção_**: Atualmente não implementado devido implementação recente por parte da Avalabs.
 
