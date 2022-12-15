@@ -14,9 +14,9 @@ Sem construtor, inicialização normal em ```Subnet::initialize``` a partir de u
 
 ## Membros da classe ChainTip
 
-Os membros desta classe podem ou não manipular as variáveis ```Hash preferedBlockHash```, ```unordered_map<Hash, Block*, SafeHash> internalChainTip``` e ```unordered_map<Hash, BlockStatus, SafeHash> cachedBlockStatus```, e apenas essas variaveis.
+Os membros desta classes tem acesso as variáveis ```Hash preferedBlockHash```, ```unordered_map<Hash, Block*, SafeHash> internalChainTip``` e ```unordered_map<Hash, BlockStatus, SafeHash> cachedBlockStatus```.
 
-Posteriormente, no [processo de aceitar o bloco](subnet.md), os dados armazenados serão copiados para um novo bloco e adicionados ao 'Chain Head'.
+Posteriormente no [processo de aceitar o bloco](subnet.md), os dados armazenados serão copiados para um novo bloco e adicionados ao 'Chain Head'.
 
 ### Chain Tip: setBlockStatus
 
@@ -40,7 +40,7 @@ Retorna ```false``` se o estado diferir de ```BlockStatus::Processing```.
 
 ### Chain Tip: accept
 
-A _Rede Principal_ solicita ao Node que o bloco verificado  seja aceito, se o bloco foi verificado anteriormente e não está sendo processado o mesmo é enviado ao [State -> processNewBlock](state.md), e adicionado ao 'Chain Head'.
+A _Rede Principal_ solicita ao Node que o bloco verificado  seja aceito, se o bloco foi verificado anteriormente e não está sendo processado o mesmo é enviado ao [State::processNewBlock](state.md), e adicionado ao 'Chain Head'.
 
 ### Chain Tip: reject
 
