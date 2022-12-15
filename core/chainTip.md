@@ -1,12 +1,12 @@
 # Arquivo core/chainTip.md
 
-## Sobre o objeto ChainTip
+## Sobre o objeto Chain Tip
 
-O objetivo do ChainTip é de realizar operações relacionadas aos blocos recebidos pela _Rede Principal_, nela é contido informações como o melhor bloco, se um bloco está sendo processado, aceitado ou rejeitado.
+O objetivo do 'Chain Tip' é de manter o controle dos blocos recebidos pela _Rede Principal_, nela é contido informações como o bloco preferido (escolhido pela _Rede Principal_), se o bloco foi aceito, em processamento ou rejeitado.
 
-Essencialmente o ChainTip age que nem uma espécie de "mempool" - quando um bloco chega num consenso (ou seja, sai do estado de "processamento" e entra ou no estado de "aceito" ou "rejeitado"), ele não mais permanece no ChainTip e é devidamente descartado (caso rejeitado) ou migrado para o ChainHead (caso aceito).
+Essencialmente o 'Chain Tip' atua semelhante a uma "mempool", quando um bloco chega num consenso (ou seja, sai do estado de "processamento" e entra ou no estado de "aceito" ou "rejeitado"), ele não mais permanece no 'Chain Tip' e é devidamente descartado (caso rejeitado) ou migrado para o 'Chain Head' (caso aceito).
 
-O ChainTip não pode aceitar um bloco que já foi recepcionado anteriormente, essa regra se aplica a todas as situações que um bloco pode estar, e para que isso não ocorra é guardado na lista ```cachedBlockStatus <Hash,BlockStatus, SafeHash>``` a situação de todos os blocos recebidos.
+O 'Chain Tip' não pode aceitar um bloco que já foi recepcionado anteriormente, essa regra se aplica a todas as situações que um bloco pode estar, e para que isso não ocorra é guardado na lista ```cachedBlockStatus <Hash,BlockStatus, SafeHash>``` a situação de todos os blocos recebidos.
 
 ## Inicialização
 
