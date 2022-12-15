@@ -1,14 +1,14 @@
-# Arquivo Main.cpp
+# File Main.cpp
 
-Em nosso *ponto de entrada* é criado um [**ponteiro único**](https://en.cppreference.com/w/cpp/memory/unique_ptr) para a instância de Subnet, observe que o ponteiro é definido fora do bloco da função "*int main() {...code}*" tornando-a um ponteiro global único.
+In our *entrypoint* an [**unique pointer**](https://en.cppreference.com/w/cpp/memory/unique_ptr) is created for the Subnet instance, observe that the pointer is defined outside the function block "*int main() {...code}*" becoming a unique global pointer.
 
-A Pré-inicialização da Blockchain é feito pelo membro da classe *subnet->start*, esse processo consiste na preparação dos serviços que são utilizados para acessar a _Rede Principal_ (AvalancheGo), vale ressaltar que esse procedimento apenas prepara o ambiente para a _Rede Principal_, onde em determinado momento irá receber as informações da Mainnet e começar o processo de inicialização.
+The Blockchain preinitialization is made by the class member *subnet->start*, this proccess consists of preparing the services that are used to access the _Mainnet_ (AvalancheGo), note that this procedure only prepares the ambient for the _Mainnet_, where at some point will receive data of the _Mainnet_ and start the process initialization.
 
-O principal serviço iniciado em *subnet->start* é o 'gRPC Server', que na implementação atual é nosso único canal de recepção onde a _Rede Principal_ envia os dados, sua instância pode ser encontrada em ```Subnet::grpcServer```.
+The main service started in *subnet->start* is the 'gRPC Server', which in the current implementation is our only reception channel where the _Mainnet_ sends data, its instance can be found in ```Subnet::grpcServer```.
 
-O papel de 'gRPC Server' é de intermediador das solicitações dá controle a Subnet em quaisquer operações, imagine-o como um controlador de conteúdo que direciona os dados para as conexões dos Nodes (disponível pelo gRPC e a interface AvalancheGo Daemon) para transações e operações solicitadas.
+The role of 'gRPC Server' is being the middleman between AvalancheGo to the Subnet instance in any operations. Imagine it as a data source, as blocks and other operations are transmited by AvalancheGo to the Subnet.
 
-Para exemplificar melhor considere o seguinte fluxograma:
+To exemplify better consider the following flowchart:
 
 ```mermaid
 flowchart TB
@@ -31,6 +31,13 @@ sb1 --> gRPC
 t1 <--"async"--> gRPC
 ```
 
-## Para saber mais...
+## To know more...
 
-Visite [**esse documento**](../core/subnet.md) com as relações da classe base do Subnet e outros diagramas.
+Visit [**this document**](..core/subnet.md) with the Subnet base class relations and other diagrams.
+
+
+
+
+
+
+

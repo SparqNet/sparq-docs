@@ -1,58 +1,58 @@
-# Arquivo core/state.md
+# File core/state.md
 
-## Sobre o objeto State
+## About the object 'State'
 
-O objetivo do objeto 'State' é de representar o estado das contas, transações, balanço nativo, balanço de tokens e contratos. Sendo possível apenas a alteração dos dados armazenados a traves do processo de criação de blocos, seja por conta própria ou recebido pela _Rede Principal_ (Veja [**_core/subnet.md_**](subnet.md) para os casos de uso).
+The objective of 'State' object is to represent the state of accounts, transactions, native balance, token balance and contracts. Only being possible to change the data stored through the process of block creation, either on your own or received by the _Mainnet_ (See [**_core/subnet.md_**](subnet.md) for the use cases).
 
-## Initialização
+## Initialization
 
-O 'State' recebe tanto o acesso da base de dados (DB) quanto um ```grpcClient``` para comunicar com o AvalancheGo, por exemplo. Solicitar ao AvalancheGo um novo bloco.
+The 'State' receives both database access (DB) and ```grpcClient``` to communicate with AvalancheGo, for example: Request AvalancheGo a new block.
 
-## Membros da classe State
+## Class members of State
 
-Todos os membros desta classe diz respeito da atualização da própria Chain que o Node representa e sua sincronização ao ecosistema de "Subnets" conectados a uma _Rede Principal_ e outras pontas de Subnet (Subnetooor).
+All the class members behave to represent the current State of the Chain or Node and to keep a synchronized state in the ecosystem of "Subnets" between all the Nodes connected to the _Mainnet_.
 
 ### State: getNativeBalance
 
-Recupera o saldo nativo da conta fornecida.
+Returns requested account native balance.
 
 ### State: getNativeNonce
 
-Recupera o número de transação da conta fornecida.
+Returns requested account transaction number.
 
 ### State: validateNewBlock
 
-Verifica se o bloco dado como argumento é um bloco valido para dar continuidade na blockchain, checando as assinaturas, transações e outras informações obrigatorias do bloco.
+Verifies if new block given as argument is valid to continue the blockchain, checking signatures, transactions and other obrigatory information.
 
 ### State: processNewBlock
 
-Processa o novo bloco e atualiza o 'State', esse método é chamado apenas pela 'Chain Tip' quando a rede solicita que um bloco será aceito (Consulte ```Subnet::acceptBlock``` [aqui](subnet.md)).
+Process the new block and updates 'State', this method is called only by the 'Chain Tip' when the network requests that a new block will be accepted (Check ```Subnet::acceptBlock``` [here](subnet.md)).
 
 ### State: createNewBlock
 
-Cria um bloco a partir do melhor candidato em 'Chain Tip' quando as seguintes condições são satisfeitas:
+Creates a new block from the preferred (or best candidate) block on 'Chain Tip' when the following conditions are satisfied:
 
-1. Existir um candidato em 'Chain Tip' selecionado pela rede.
-2. Existir o Hash do bloco em 'Chain Tip'.
-3. Existir um bloco correspondente ao Hash na 'Block-Chain'.
+1. There is a candidate in 'Chain Tip' selected by the network
+2. There is the Block's Hash in 'Chain Tip' 
+3. There is a block corresponding to the Hash in the 'Chain Head'.
 
-Se qualquer condição acima falhar será retornado ```nullptr```, e a operação será cancelada.
+If any condition above fails ```nullptr``` will be thrown, and the operation will be canceled.
 
 ### State: validateTransactionForBlock
 
-Faz a validação das seguintes condições em uma transação:
+Validates the following conditions in a transaction:
 
-1. A transação já foi validada.
-2. A transação se encontra na 'memory pool'.
-3. Conta existe ou se há ~~qualquer~~ saldo para realizar a transação.
-4. Se a conta têm saldo suficiente para realizar a transação e se o Nonce dele é valido.
+1. The transaction has already been validated.
+2. The transaction is present  in 'memory pool'.
+3. Account exists and if the account has ~~any~~ funds to make any transaction.
+4. The account has enough balance to complete the transaction, and its Nonce is valid.
 
-Se qualquer condição falhar é retornado ```falso```.
+If any condition fails ```false``` is returned.
 
-**_Atenção_**: Essa operação não altera o State da block-chain.
+**_Warning_**: This operation does not change the Block-chain State
 
 ### State: validateTransactionForRPC
 
-Realiza a mesma validação que **_validateTransactionForBlock_**, porém é utilizado exclusivamente Nodes do ecossistema **Sparq Network**.
+Performs the same validations that **_validateTransactionForBlock_** however it's exclusively used Nodes from **Sparq Network** ecosystem.
 
-**_Atenção_**: Essa operação não altera o State da block-chain.
+**_Warning_**: This operation does not change the Block-chain State.

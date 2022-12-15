@@ -1,28 +1,26 @@
-# Arquivo core/subnet.md
+# File core/subnet.md
 
-### Sumário
+### Summary
 
-* **Sobre o Objeto**
-* **O Papel do AvalancheGo Daemon**
-* **Por que AvalancheGo?**
-* **Pre-inicialização**
-* **Inicialização**
-* **Membros da classe Subnet**
-* **Desligamento**
+* **About the Object**
+* **Role of AvalancheGo Daemon**
+* **Why AvalancheGo?**
+* **Pre-initialization**
+* **Initialization**
+* **Class members of Subnet**
+* **Shutdown**
 
-**_TODO:_** Sempre atualizar o Sumário com os tópicos mais recentes
+## About the object Subnet
 
-## Sobre o objeto Subnet
+As examplified in [entry-point file](../src/main.md) the objective of the class Subnet is to encapsulate and redirect modules of Nodes, where the Subnet will act like an intermediator, the Subnet (Subnetooor) will also handle smart-contracts written in [Solidity](https://github.com/ethereum/solidity) while participating in a Network made of Sparq Subnets.
 
-Conforme exemplificado anteriormente no [arquivo ponto de entrada](../src/main.md) a finalidade da classe Subnet é encapsular e redirecionar os módulos dos Nodes onde a Subnet atuará como um intermediador, a Subnet (Subnetooor) também atuará como uma engine de execução para aplicações de smart contracts em [Solidity](https://github.com/ethereum/solidity) com integração de múltiplas vias da Rede Subnets Sparq.
+Currently, the only integration layer to communicate with other Nodes is dependent on VMs (Virtual Machines, more in [AvalancheGo](https://github.com/ava-labs/avalanchego/tree/master/vms)) by [AvaLabs](https://www.avalabs.org/), and is being developed a communication peer-to-peer between Subnets (Subnetooor) with a proper structure of requests.
 
-Atualmente a única integração de comunicação dos Nodes é dependente das VM (Virtual Machines, mais em [AvalancheGo](https://github.com/ava-labs/avalanchego/tree/master/vms)) da [AvaLabs](https://www.avalabs.org/), e está sendo desenvolvido uma comunicação de Ponta-A-Ponta entre as Subnets (Subnetooor) e também um modelo de requisições para que outras Subnets realizem a conexão e comuniquem entre sí.
+## Role of AvalancheGo Daemon
 
-## O Papel do AvalancheGO Daemon
+The AvalancheGo and our Subnet communicate between the service/protocol to access other nodes, AvalancheGo itself is a Virtual Machine executing the Subnet binary (Subnetooor), the same VM serve as a Mainnet for the Nodes, the VM will read the terminal output in "``std::cout << "1|19|tcp|" << server_address << "|grpc\n" << std::flush;``" and propagate the IP to the connected Nodes being executed in parallel (script ``scripts/AIO-setup.sh``), furthermore the AvalancheGo includes the Subnet (Subnetooor) as a valid and available blockchain.
 
-A AvalancheGo e nossa Subnet se comunicam pelo serviço gRPC para se comunicar com os nodes, o mesmo é uma Virtual Machine executando o binário Subnet (Subnetooor*) que servirá como Rede Principal para os Nodes, a própria VM Local faz a leitura da saída do terminal em "``std::cout << "1|19|tcp|" << server_address << "|grpc\n" << std::flush;``" e faz a propagação do IP para os Nodes que estão sendo executados em paralelo (pelo comando ``scripts/AIO-setup.sh``), além disso, o AvalancheGo adiciona a Subnet (Subnetoor*) a lista de chains disponíveis.
-
-De acordo com a [*documentação*](https://docs.avax.network/subnets/create-a-local-subnet) do AvaLabs cada alocação gera as block-chain; X-Chain, P-Chain e C-Chain, e cada "Chain" com suas aplicações e contratos em execução, o papel do AvalancheGO Daemon é de uma Rede Principal Local onde os Nodes façam a conexão com a Subnet desejada fora da rede e internamente as solicitações são validadas.
+According to the [_documentation_](https://docs.avax.network/subnets/create-a-local-subnet) by AvaLabs every initialization (of the VMs) creates the blockchain; X-Chain, P-Chain and C-Chain, and every "Chain" running their applications and contracts, the role of AvalancheGo Daemon is to behave as a Local Mainnet where the registred Nodes can connect and transit to any Node in between.
 
 ```mermaid
 flowchart LR
@@ -76,19 +74,19 @@ B <-.?? Network Connection ??.-> C
 C <-.?? Network Connection ??.-> A
 ```
 
-#### Atenção
+### Caution
 
-Cada Virtual Machine do AvalancheGo está executando uma cópia de Subnetoord, verifique o arquivo **_debug.txt_** de cada VM em **_$GO_DIRECTORY/src/github.com/ava-labs/avalanchego/node{n}_** para os logs do binário de cada Virtual Machine, o mesmo arquivo se encontra no diretório do projeto para os logs do binário local.
+Every Virtual Machine of AvalancheGo is executing a copy of Subnetooord (our binary), observe the file **_debug.txt_** inside each VM in **_$GO_DIRECTORY/src/github.com/ava-labs/avalanchego/node{n}_** to get the logs of every binary, the same file can be read at the root directory when executing as Standalone.
 
-## Por que AvalancheGo?
+## Why AvalancheGo
 
-Um dos pré-requisitos a serem satisfeitos no início do projeto foi a implementação do próprio AvalancheGo, grande feito que surgiu impacto no escopo do projeto más também beneficiou a imagem pública do projeto.
+One of the pre-requisites to be satisfied in at the project's beginning was the implementation of AvalancheGo itself, great achievement that increased the project scope but also benefits the public image of the project.
 
-## Pre-inicialização
+## Pre-initialization
 
-Após a inicialização das VMs do AvalancheGo temos 60 segundos até a inicialização do binário da Subnet (Subnatooor), pois assim que o tempo limite (60 segundos) for atingido todas as VMs irão receber uma solicitação cURL para o registro da blockChain na rede AvalancheGo.
+After initialization the VMs of AvalancheGo the Subnet binary has 60 seconds to initialize, because after the timelimit expires a request to register the Subnet will be sent (using cURL).
 
-**cURL em AIO_Setup.sh:**
+**cURL request in AIO_Setup.sh:**
 
 ```json
 {
@@ -106,13 +104,13 @@ Após a inicialização das VMs do AvalancheGo temos 60 segundos até a iniciali
 }
 ```
 
-Esse tempo limite ocorre porque é um pré-requisito das VMs que sejam "configuradas", isto é receber na rede principal a solicitação de registro do Node Intermediário pelo método ```platform.createBlockchain``` e logo em seguida a inicialização do ```Subnet::start``` do nosso binário com a saída da porta do serviço pelo terminal.
+This timelimit happens because it is a pre-requisite of the VMs to be "prepared", that is the Mainnet receive a request to _create a blockchain_ with the Node's credentials represented in ```platform.createBlockchain``` request, right after the initialization ```Subnet::start``` of our binary will output the service port in terminal.
 
-Durante o processo de ```Subnet::start``` é inicializado um servidor gRPC (```shared_ptr Subnet::grpcServer```) que disponibiliza de forma assíncrona um canal de comunicação ao AvalancheGo, os métodos como; inicialização, shutdown e validar blocos, entre outros são recebidos por esse canal e podem ser encontrados em ```proto/vm.proto```.
+During the process of ```Subnet::start``` we create an instance of a server gRPC (```shared_ptr Subnet::grpcServer```) allowing a request channel to be called asynchronously by AvalancheGo, methods like; Initialize, Shutdown and block validation, the entire interface can be found at ```proto/vm.proto```.
 
-## Inicialização
+## Initialization
 
-Após o AvalancheGo registrar a Subnet em sua lista de Nodes, ele sinalizará o comando ```rpc Initialize(InitializeRequest)``` que corresponde ao método ```Subnet::initialize``` do Subnet (Subnetooor), onde nele irá ser instanciado os membros:
+After the AvalancheGo added our Subnet to the list of connected Nodes, the Mainnet will emit the command ```rpc Initialize(InitializeRequest)``` equivalent to the method ```Subnet::initialize```, starting the following instances (stored in Subnet's pointer):
 
 * DB
 * gRPC Client
@@ -123,14 +121,13 @@ Após o AvalancheGo registrar a Subnet em sua lista de Nodes, ele sinalizará o 
 * P2PManager
 * HttpServer
 
-Além disso, a Subnet armazena no struct ```InitializeRequest``` as informações da rede que ele está conectado como o IP do servidor, chainID, subnetID entre outros.
+Meanwhile, the Subnet stores in a struct ```InitializeRequest``` a collection of data from the Mainnet, like chainId, subnetId, etc.
 
-### Sobre DB
+### About DB
 
-As informações são armazenadas por um par de valores <Chave/Valor> dentro do DB, utilizando LevelDB, a 
-'scheme database' atual é herdada das versões anteriores que se comunicava diretamente ao AvalancheGo. 
+Any record in 'ChainHead' will be stored in a key pair <Key/Value> inside the DB (LevelDB), the 'database scheme' is an inherit of previous iteractions where we directly stored the data in AvalancheGo.
 
-A escrita e leitura dos registros armazenados na base de dados é necessário o acompanhamento da tabela abaixo.
+The database scheme is the following:
 
 | Prefixo | Tipo de Dado | Comportamento | Valor                   |
 | ------- | ------------ | ------------- | ----------------------- |
@@ -142,56 +139,55 @@ A escrita e leitura dos registros armazenados na base de dados é necessário o 
 | 0006    | ERC721       | -             | Tokens/State            |
 | 0007    | Key          | Tx Hash       | Block Hash              |
 
-A transmissão de leitura e escrita do DB é realizada pelo membro ```Subnet::dbServer``` que possui a implementação do protocolo em **_proto/rpcdb.proto_**.
+The access of the data and its instance is a member of ```Subnet::dbServer```, the object's behaviour is based on the structure found in **_proto/rpcdb.proto_**.
 
-### Sobre gRPC Client
+### About gRPC Client
 
-O 'gRPC Client' pode solicitar diretamente ao AvalancheGo os procolos nos arquivos **_proto/aliasreader.proto_**, **_proto/keystore.proto_**, **_proto/metrics.proto_** e **_proto/sharedmemory.proto_**.
+AvalancheGo expects a 'gRPC Client' when the Node needs to request anything related, for that to happen the 'gRPC Client' must have the behaviour of any (or all the) file(s) **_proto/aliasreader.proto_**, **_proto/keystore.proto_**, **_proto/metrics.proto_** and **_proto/sharedmemory.proto_**.
 
-### Sobre o State
+### About State
 
-A classe de 'State' serve para armazenar o estado atual do sistema, atividades como saldo nativo (native balance), estados de contratos, mempool de transações (lista não ordenada de Hash, Base, SafeHash), balanço de tokens e variáveis/processos da block-chain. Somente blocos podem atualizar o 'State', seja por ele mesmo criar um ou receber um novo bloco da rede.
+The class 'State' stores the current state of the system, activities like native balance, contract states, mempool of transactions (non-ordered list composed of Hash, Base and SafeHash), balance of tokens and variables/procedures of the blockchain. Only new blocks can update the 'State', by creating one itself or receive a new block from the network.
 
-### Sobre Chain Head
+### About Chain Head
 
-A 'Chain Head' realiza o rastreamento da própria block-chain, fáz o armazenamento das confirmações de blocos/transações, essas informações são consultadas em diversas partes do sistema.
+The 'Chain Head' tracks data from the blockchain, it stores confirmations of blocks and transactions, this data can be accessed in various parts of the system.
 
-### Sobre o Chain Tip
+### About Chain Tip
 
-O 'Chain Tip' é similar ao 'Chain Head', porém ele realiza o rastreamento dos blocos rejeitados e blocos sendo processados no momento, o mesmo também rastreia o bloco preferencial (bloco com maior chance) de ser aceito.
+'Chain Tip' is similar to 'Chain Head', but tracks only rejected blocks, blocks being processed at the time and preferred block (block with greater chance) of being accepted.
 
-### Sobre o Block Manager
+### About Block Manager
 
-**_TODO:_** Aguardando documentação do Itamar
+**_TODO:_** Waiting full implementation in the system to be described.
 
-### Sobre o P2PManager
+### About P2PManager
 
-O serviço de ponta-a-ponta 'P2PManager' é feito por web-sockets, esse serviço é responsável pela propagação de transações e informações do bloco processado para as demais Subnets (Subnatooor).
+This service peer-to-peer 'P2PManager' is done with web-sockets, this service is responsible for propagation of transactions and data about the block being processed to other Subnets (Subnetooor).
 
-### Sobre o HttpServer
+### About HttpServer
 
-O 'HttpServer' disponibiliza uma conexão direta para serviços dos frameworks web (Web3, ethers, etc) como MetaMask, CoinBase e Frame.
+We provide a 'HttpServer' so any web application using the popular frameworks (Web3, ethers, etc) can consume the Subnet, apps like MetaMask, Coinbase and Frame.
 
-## Membros da classe Subnet
+## Class members of Subnet
 
-Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicialização**' a _Rede Principal_ solicita de forma assíncrono diversos métodos relacionados ao estado do Block-chain (veja **_proto/vm.proto_** para mais detalhes), seja para perguntar se ambos estão em sinergia ou solicitações ao validador de bloco. A seguir a implementação das demais funcionalidades que a rede pode solicitar.
+As previously mentioned on the topics '**Pre-initialization**' and '**Initialization**', the _Mainnet_ make asynchronous requests of various methods related to the state of Blockchain (see **__proto/vm.proto__** for more details), either to validate if the data is synced or use block validator. 
 
 ### Subnet: SetState
 
-Conforme o código-fonte do AvalancheGo que implementa **_proto/vm.proto_**, esse método é chamado quando a _Rede Principal_ precisa sinalizar qual a situação que a rede se encontra (veja [net/grpcserver.md](../net/grpcserver.md) para o ID dos estados).
+According to the AvalancheGo's source-code implementing **_proto/vm.proto_**, this method is called when the _Mainnet_ emits the current State the network (more in [net/grpcserver.md](../net/grpcserver.md)).
 
-**_Atenção_**: Atualmente não implementado devido implementação recente por parte da Avalabs.
+**_Caution:_** Currently not implemented because of its recent inclusion on Avalabs side.
 
-### Subnet: ParseBlock
+### ParseBlock
 
-A _Rede Principal_ irá solicitar a análise do bloco enviado ao Node, se ele faz parte do 'Chain Head' ou 'Chain Tip', se encontrado independente de ter sido rejeitado ou adicionado ao 'Chain Head' e suas condições sendo:
+The _Mainnet_ sends a block to be parsed by the Node, if present in 'Chain Head' or 'Chain Tip', ignoring the rejection or acceptance of the block in 'Chain Head', and meeting the following conditions:
 
-1. Em duas ocorrências pode retornar **_verdadeiro_**, a primeira quando já foi processada anteriormente, e a segunda quando é adicionado ao 'Chain Tip' para processamento.
-2. A única ocorrência de retornar **_falso_** nesse estágio é quando ocorre uma excessão causada pelo 'Chain Tip'.
+1. In two occurrences it can return **_true_**, the first when it has already been processed previously, and the second when it is added to the 'Chain Tip' for processing.
 
-### Condição 1.
+2. The only ocorrence it can return **_false_** at this stage is when the 'Chain Tip' throws an exception.
 
-Verificação de se o Bloco já se encontra presente no 'Chain Head' ou em 'Chain Tip':
+### Condition 1.
 
 ```mermaid
 
@@ -225,9 +221,7 @@ ERR --"return false"--> MN2
 
 ```
 
-### Condição 2.
-
-Verificando se o Bloco é menor ou o mesmo que o ultimo bloco adicionado pelo 'Chain Head':
+### Condition 2.
 
 ```mermaid
 flowchart LR
@@ -260,60 +254,61 @@ C1 --"return true"--> MN2
 ERR --> R3
 R3 --"return false"--> MN2
 ```
-**_Atenção ¹:_** Não é rejeitado Blocos no futuro (Unknown ou nHeight maior que o esperado), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
 
-**_Atenção ²:_** 'ParseBlock' **não realiza verificação da lógica das transações**, apenas se as assinaturas são validas.
+**_Caution ¹:_** We avoid the rejection of Blocks in the future (higher number height or Unknown), this prevention is because AvalancheGo can negate to resend the same block at the right time, making the Chain invalid. 
+
+**_Caution ²:_** 'ParseBlock' **does not validate the transaction logic**, it only checks the signatures.
 
 ### Subnet: acceptBlock
 
-O método ```Subnet::acceptBlock``` recebe da _Rede Principal_ o Hash correspondente a um bloco que está presente no 'Chain Tip', sua solicitação significa que o bloco está pronto para ser adicionado ao 'Chain Head', a rede AvalancheGo nunca deverá enviar outro bloco para ser aceito com o mesmo 'Number Height', se ocorrer acontecerá um erro de excessão não controlado.
+The method ```Subnet::acceptBlock``` receives from the _Mainnet_ the Hash of a block present in 'Chain Tip', this triggers the system to add from 'Chain Tip' to the 'Chain Head', the AvalancheGo should never send another block with the same number height, otherwise an exception will be thrown.
 
 ### Subnet: rejectBlock
 
-Essa chamada é utilizada pela _Rede Principal_ para rejeitar um bloco enviado posteriormente ao 'Chain Tip'.
+This method is called by the _Mainnet_ when a block previously sent to the 'Chain Tip' should be rejected.
 
 ### Subnet: setPreference
 
-A _Rede Principal_ envia a Hash do bloco disposto na 'Chain Tip' que ainda não foi processado e define como "preferido", isto é o melhor candidato de ser adicionado ao 'Chain Head'. 
+The _Mainnet_ sends a Hash of the block present at 'Chain Tip', the selected block will be set to preferred block.
 
 ### Subnet: validateTransaction
 
-Faz a validação de uma transação, exclusivo apenas para Nodes da Subnet (Subnetooor), é verificado se a conta têm saldo, se o 'nonce' é valido e se a transação não se encontra na 'memory pool'.
+Validates a transaction, exclusive only for Sparq Subnets (Subnetooor), it checks if the account has balance, 'nonce' is valid and if the transaction is missing at 'memory pool'.
 
-**_Atenção_**: Essa movimentação da transação ao 'memory pool' não altera o 'State' do programa (consulte o arquivo de definição **_state.h_** para saber oque altera o estado da aplicação). 
+**_Caution:_** This allocation of transaction in 'memory pool' does not alter the 'State' of the program (check the **_state.h_**).
 
 ### Subnet: verifyBlock
 
-Faz a validação das transações do bloco, se o Hash do novo bloco têm como bloco anterior o último bloco da 'Chain Head', se sua altura númérica está sequenciada, e se a assinatura do bloco é coerente ao validador primário na lista de Nodes conectados.
+Verifies the transactions of a given block, if the Hash of the new block has the previous block present at 'Chain Head', if its height order is sequenced, and whether the block signature is consistent with the primary validator in the list of connected Nodes.
 
-Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip'.
+If all the mentioned conditions are satisfied the block will be added to the end of 'Chain Tip'.
 
 ### Subnet: getAncestors
 
-Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida (usando a posição do bloco fornecido) até o bloco mais recente.
+Checks the origins of a given block, its depth, size and time, if the block is present in 'Chain Head', if the block exists within the 'Chain Head', a verification is made from the starting point (position of the found Block) to the most recent block.
 
 ### Subnet: getBlock
 
-Retorna um bloco se ele existir na 'Chain Head' ou no 'Chain Tip', se o bloco já se encontra na 'Chain Head' retorna ```Status: Accepted```, se o bloco se encontra na 'Chain Tip' a situação pode ser ```Status: Unknown | Processing | Rejected```, do contrário o bloco não foi encontrado.
+Returns a block if exists in 'Chain Head' or in 'Chain Tip', if the block is found in 'Chain Head' returns the block with ```Status: Accepted```, otherwise the block is present in 'Chain Tip' the status can be ```Status: Unknown | Processing | Rejected```, otherwise the block was not found.
 
 ### Subnet: blockRequest
 
-Cria um novo bloco quando há um bloco candidato em 'Chain Tip' (consulte **_setPreference_**).
+Create a new block if a preferred block is in 'Chain Tip' (see **setPrefence**).
 
 ### Subnet: connectNode
 
-Guarda a conexão de um Node, esse método pode ser chamado também pela _Rede Principal_.
+Stores in the memory the connection of a Node, this method can be used by _Mainnet_.
 
 ### Subnet: disconnectNode
 
-Remove um Node da lista de Node conectados.
+Discart a Node connection from memory.
 
-## Desligamento
+## Shutdown
 
-Similar a inicialização o desligamento é iniciado pela AvalancheGo, esse procedimento ocorre em ```Subnet::stop``` que é executado quando a AvalancheGo envia ```rpc Shutdown(args)```, o processo é realizado na sequencia:
+Similar to the initialization, the shutdown procedure is requested by AvalancheGo, the function is located at ```Subnet::stop```, with the following sequence:
 
-1. Escrever o conteúdo de 'Chain Head' da memória para a base de dados.
-2. Escrever o conteúdo de 'State' da memória para a base de dados.
-3. Desligar a base de dados.
-4. Desligar o 'HttpServer'.
-5. Desligamento total com o método ```Subnet::shutdownServer```.
+1. Write the contents of 'Chain Head' from memory to the database.
+2. Write the contents of 'State' from memory to the database.
+3. Shutdown a database.
+4. Turn off 'HttpServer' service.
+5. Full shutdown with the Subnet::shutdownServer method.

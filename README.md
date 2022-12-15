@@ -1,7 +1,10 @@
-# Introdução
+# Introduction
 
-Esse documento e os demais derivados vinde explicar e introduzir o programador na aplicação, contanto não estranhe a estrutura dos arquivos pois ela imita a mesma arquitetura até o momento e será atualizado constantemente, as definições de cada arquivo será minimalista e até mesmo informal porque será levado em consideração a familiaridade do leitor no mesmo.
+This document and other derivatives will explain and introduce the developer to the application, the file structure imitates the same architecture until the moment and will be updated constantly so don't find it strange, the file definitions will be minimalist and even informal since familiarity will be considered by those who read.
 
-Os documentos podem ser acessádos em qualquer momento e fora de ordem, e em alguns casos haverá exemplos com **UML** quando uma ou várias classes se interagem para representar um comportamento.
+These documents can be accessed at any moment and out of order, in some cases there will be **UML** examples when one or several classes interact to represent behavior.
 
-Esse documento é escrito e mantido pelos desenvolvedores [Jean-Lessa](https://github.com/Jean-Lessa) e [GabrielVilarinho](https://github.com/GabrielVilarinho).
+This document is written and maintained by the developers [Jean-Lessa](https://github.com/Jean-Lessa) and [GabrielVilarinho](https://github.com/GabrielVilarinho).
+
+
+

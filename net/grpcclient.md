@@ -1,17 +1,17 @@
-# Arquivo net/grpcclient.md
+# File net/grpcclient.md
 
-## Sobre o objeto grpcClient
+## About the grpcClient object
 
-O 'grpcClient' implementa as ‘interfaces’ de **_aliasreader.proto_**, **_appsender.proto_**, **_keystore.proto_**, **_messenger.proto_** e **_sharedmemory.proto_**, permitindo que o 'Client' ou Node faça solicitações diretamente ao AvalancheGo, essas requisições devem fazer parte do escopo dos arquivos **.proto**.
+The 'grpcClient' implements the 'interfaces' of **_aliasreader.proto_**, **_appsender.proto_**, **_keystore.proto_**, **_messenger.proto_** and **_sharedmemory.proto_**, allowing the 'Client' or Node make requests directily to AvalancheGo, these requests must be part of the **.proto** files scope.
 
-## Inicialização
+## Initialization
 
-É Inicializado em ```Subnet::start```, e seu construtor recebe três parâmetros, o primeiro é o canal de comunicação do gRPC ```grpc->CreateChannel``` que é preciso o endereço de IP do AvalancheGo, segundo parâmetro trata-se da lista de Nodes conectados ao AvalancheGo ```private Subnet::connectedNodes``` (veja [core/grpcserver.md](grpcserver.md) em '_Connected_' e '_Disconnect_'), e por último a lista de travas para os Nodes conectados ```private Subnet::connectedNodesLock```.
+Initialized at ```Subnet::start```its constructor receives three parameters, the first is the gRPC channel communication ```grpc->CreateChannel``` given the IP of AvalancheGo, the second parameter is the list of Nodes connected to AvalancheGO ```private Subnet::connectedNodes``` (see [core/grpcserver.md](grpcserver.md) in '_Connected_' and '_Disconnect_') and for the last parameter is the list of locks for connected Nodes ```private Subnet::connectedNodesLock```.
 
-## Membros da classe
+## Class members
 
-Essa classe só possui um membro de classe, e suas variáveis correspondem às 'interfaces' apesar do sistema não realizar todas as chamadas que o "servidor" do AvalancheGo atende.
+This class only has one class member, and it's variables correspond to the 'interfaces' although the system not making all the calls the AvalancheGo "server" attends to.
 
 ### grpcClient: requestBlock
 
-Solicita para AvalancheGo um novo bloco para ser processado (veja [core/state.md](core/state.md) em _validateTransactionForRPC_).
+Requests AvalancheGo a new block to be processed. (See [core/state.md](core/state.md) at _validateTransactionForRPC_).

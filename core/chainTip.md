@@ -1,63 +1,63 @@
-# Arquivo core/chainTip.md
+# File core/chainTip.md
 
-## Sobre o objeto Chain Tip
+## About the object ChainTip
 
-O objetivo do 'Chain Tip' é de manter o controle dos blocos recebidos pela _Rede Principal_, nela é contido informações como o bloco preferido (escolhido pela _Rede Principal_), se o bloco foi aceito, em processamento ou rejeitado.
+The purpose of the 'ChainTip' is to keep track of the blocks received by the _Mainnet_, it contains information such as the preferred block (chosen by the Main Network), if the block was accepted, being processed or rejected.
 
-Essencialmente o 'Chain Tip' atua semelhante a uma "mempool", quando um bloco chega num consenso (ou seja, sai do estado de "processamento" e entra ou no estado de "aceito" ou "rejeitado"), ele não mais permanece no 'Chain Tip' e é devidamente descartado (caso rejeitado) ou migrado para o 'Chain Head' (caso aceito).
+Simplifying the 'ChainTip' acts similar to a "mempool", when a block reaches a consensus (go from "processing" to either "accepted" or "rejected" state), the block does not belong in 'ChainTip' anymore, and is discarted (if rejected) or moved to the 'Chain Head' (if accepted).
 
-O 'Chain Tip' não pode aceitar um bloco que já foi recepcionado anteriormente, essa regra se aplica a todas as situações que um bloco pode estar, e para que isso não ocorra é guardado na lista ```cachedBlockStatus <Hash,BlockStatus, SafeHash>``` a situação de todos os blocos recebidos.
+The 'ChainTip' cannot accept a previously added block, this rule applies to every state a block can be, and to prevent we save a reference in ```cachedBlockStatus <Hash, BlockStatus, SafeHash>``` the state of every received block.
 
-## Inicialização
+## Initialization
 
-Sem construtor, inicialização normal em ```Subnet::initialize``` a partir de um ponteiro.
+Normal initialization in ```Subnet::initialize```, with a pointer.
 
-## Membros da classe ChainTip
+## Class members of ChainTip
 
-Os membros desta classes tem acesso as variáveis ```Hash preferedBlockHash```, ```unordered_map<Hash, Block*, SafeHash> internalChainTip``` e ```unordered_map<Hash, BlockStatus, SafeHash> cachedBlockStatus```.
+The members of this class are limited to access the variables ```Hash preferedBlockHash```, ```unordered_map<Hash, Block*, SafeHash> internalChainTip``` and ```unordered_map<Hash, BlockStatus, SafeHash> cachedBlockStatus```.
 
-Posteriormente no [processo de aceitar o bloco](subnet.md), os dados armazenados serão copiados para um novo bloco e adicionados ao 'Chain Head'.
+In the future at the [process of accept a block](subnet.md), the stored data will be copied to a new block and added to 'Chain Head'.
 
-### Chain Tip: setBlockStatus
+### ChainTip: setBlockStatus
 
-Altera o estado de um bloco em ```cachedBlockStatus```.
+Set the block status present in ```cachedBlockStatus```.[chainHead.md](..%2F..%2F..%2F..%2F..%2FDownloads%2FchainHead.md)
 
-**_Atenção:_** Esse método não é referenciado em nenhum lugar do sistema.
+**_Caution:_** This method is not used anywhere in the system.
 
-### Chain Tip: getBlockStatus
+### ChainTip: getBlockStatus
 
-Se o bloco existir na 'Chain Tip', recupera o estado de um bloco adicionado ao ```cachedBlockStatus```.
+If the block is present at 'ChainTip', recover the state of a block in ```cachedBlockStatus```. 
 
-### Chain Tip: processBlock
+### ChainTip: processBlock
 
-Adiciona o bloco recebido pela _Rede Principal_ a lista ```internalChainTip``` e ```cachedBlockStatus```, para serem processados com as proximas operações da rede.
+Adds a given block to both ```internalChainTip``` and ```cachedBlockStatus``` to be processed by the next operations of the _Mainnet_.
 
-### Chain Tip: isProcessing
+### ChainTip: isProcessing
 
-Verifica se o bloco solicitado está sendo processado, se o bloco não for encontrado retorna ```false```, do contrário é consultado o estado do bloco.
+Verifies if the requested block is being processed, if the block wasn't found returns ```false```, otherwise returns the query.
 
-Retorna ```false``` se o estado diferir de ```BlockStatus::Processing```.
+Return ```false``` if the state is different of ```BlockStatus::Processing```.
 
-### Chain Tip: accept
+### ChainTip: accept
 
-A _Rede Principal_ solicita ao Node que o bloco verificado  seja aceito, se o bloco foi verificado anteriormente e não está sendo processado o mesmo é enviado ao [State::processNewBlock](state.md), e adicionado ao 'Chain Head'.
+The _Mainnet_ sends a block to the Node to be accepted, if the block was previously verified and is not being processed the block will be redirected to [State::processNewBlock](state.md), and added to 'Chain Head'.
 
-### Chain Tip: reject
+### ChainTip: reject
 
-A _Rede Principal_ solicita ao Node que o bloco verificado seja rejeitado.
+The _Mainnet_ sends a block previously verified to be rejected.
 
-### Chain Tip: exists
+### ChainTip: exists
 
-Verifica se o bloco está presente na 'Chain Tip' ```internalChainTip```.
+Verifies if the block is in 'ChainTip' ```internalChainTip```.
 
-### Chain Tip: getBlock
+### ChainTip: getBlock
 
-Retorna o bloco adicionado na 'Chain Tip' anteriormente, se não existir retorna uma exceção não controlada.
+Returns the block added previously in 'ChainTip', if it does not exist an exception will be thrown.
 
-### Chain Tip: getPreference
+### ChainTip: getPreference
 
-Retorna o Hash do melhor bloco candidáto selecionado pela rede, se não houver retorna uma exceção não controlada.
+Returns the Hash of the preferred block, if the network didn't decide the best candidate/preferred block an exception will be thrown.
 
-### Chain Tip: setPreference
+### ChainTip: setPreference
 
-Define o melhor bloco escolhido pela _Rede Principal_.
+Set the preferred block.
