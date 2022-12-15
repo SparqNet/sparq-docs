@@ -1,6 +1,6 @@
-# rdPoS - Random Deterministic Proof Of Stake
+# rdPoS - Random Deterministic Proof of Stake
 
-Este documento explica o algoritmo rdPoS (Random Determinstic Proof Of Stake), usado pela rede Sparq.
+Este documento explica o algoritmo rdPoS (Random Determinstic Proof of Stake), usado pela rede Sparq.
 
 * [Visão geral dos blockchains](#visão-geral-dos-blockchains)
 * [Como o rdPoS funciona](#como-o-rdpos-funciona)
@@ -17,7 +17,7 @@ Um dos grandes problemas do desenvolvimento de blockchains é ter que lidar com 
 
 Por exemplo, no chain do Bitcoin, supondo que há um bloco "latest" que possui outro bloco após o mesmo. Se um nó recebe um bloco que substitui esse bloco "latest", o bloco seguinte e todas as transações feitas nele também são, o que resulta em um rollback do estado do blockchain em um bloco.
 
-Os chains do Bitcoin e similares seguem a regra do "longest lived chain" (o chain maior, ou seja, com maior prova de trabalho acumulada, é o chain principal), porém rollbacks introduzem problemas com essa regra. Por exemplo, ao criar DApps onde o desenvolvedor tem que lidar com essas condições especiais, o que pode dar mais trabalho dependendo do tamanho/complexidade da aplicação.
+Os chains do Bitcoin e similares seguem a regra do "longest lived chain" (o chain maior, ou seja, com maior prova de trabalho acumulada, é o chain principal), porém, rollbacks introduzem problemas com essa regra. Por exemplo, ao criar DApps onde o desenvolvedor tem que lidar com essas condições especiais, o que pode dar mais trabalho dependendo do tamanho/complexidade da aplicação.
 
 ```mermaid
 flowchart LR
@@ -44,15 +44,17 @@ direction BT
     B2 --- C2
     D2 --> E2
     B2 --- D2
-    
+
     linkStyle 1 stroke-width:0, fill:none;
     linkStyle 3 stroke-width:0, fill:none;
 end
+
 subgraph graphA
 direction BT
     A1 --> B1
     B1 --> C1
 end
+
 subgraph graphC
     direction BT
     AI[ ] --- BI[ ]
@@ -61,25 +63,23 @@ subgraph graphC
     A3 --> B3
     B3 --> D3
     D3 --> E3
-    
+
     style AI fill:#FFFFFF00, stroke:#FFFFFF00;
     style BI fill:#FFFFFF00, stroke:#FFFFFF00;
     style EI fill:#FFFFFF00, stroke:#FFFFFF00;
-    
-    
+
     linkStyle 6 stroke-width:0, fill:none;
     linkStyle 7 stroke-width:0, fill:none;
     linkStyle 8 stroke-width:0, fill:none;
-    
 end
 
 graphA --> graphB
 graphB --> graphC
 ```
 
-No caso do diagrama acima, o bloco C foi substituído pelo bloco D seguido do E, fazendo rollback das transações feitas no bloco C.
+No caso do diagrama acima, o bloco C foi substituído pelo bloco D seguido do bloco E, fazendo rollback das transações feitas no bloco C.
 
-A solução para esse problema é evitar a condição de rollback propriamente dita. Isso pode ser feito definindo deterministicamente qual nó da rede pode criar um bloco, assim um "block race condition" não acontece e todos na rede ficam sincronizados no mesmo bloco.
+A solução para esse problema é evitar a condição de rollback propriamente dita. Isso pode ser feito definindo deterministicamente qual nó da rede pode criar um bloco, assim um "block race condition" nunca acontece e todos na rede ficam sincronizados no mesmo bloco.
 
 ## Como o rdPoS funciona
 
@@ -111,7 +111,7 @@ No caso do bloco genesis (o primeiro bloco do chain), como não há validadores 
 
 ## Implementações de validadores
 
-Como os validadores são adicionados na rede fica por conta do desenvolvedor, mas é providenciado três tipos de implementações: *descentralizada*, *centralizada*, e *semi-descentralizada*.
+Como os validadores são adicionados na rede fica por conta do desenvolvedor, mas é providenciado três implementações: *descentralizada*, *centralizada*, e *semi-descentralizada*.
 
 ### Descentralizada
 
@@ -131,12 +131,12 @@ O número de nós recomendados nessa implementação é 32, mas pode-se usar mai
 
 ### Semi-descentralizada
 
-Em uma implementação semi-descentralizada, são usados os dois tipos de validadores das implementações anteriores:
+Em uma implementação semi-descentralizada, ambos os tipos de validadores são usados:
 
 * Um validador normal, simplesmente chamado de "validador", similar ao da rede descentralizada e adicionado da mesma forma (trancando tokens); e
 * Um validador chamado "sentinela", similar ao da rede centralizada e adicionado da mesma forma (com um "endereço mestre")
 
-O detalhe aqui é que nem validadores nem sentinelas conseguem criar um bloco por conta própria - o "randomness" requer *pelo menos uma* das transações vindas de uma sentinela, e quem for enviar o bloco é obrigado a seguir a ordem da lista de validadores.
+A diferença é que nem validadores nem sentinelas conseguem criar um bloco por conta própria - o "randomness" requer *pelo menos uma* das transações vindas de uma sentinela, e quem for publicar o bloco é obrigado a seguir a ordem da lista de validadores.
 
 Isso permite um número menor de validadores na rede (16, por exemplo), necessitando de menor poder de computação para verificar, mas mantendo padrão alto de segurança. Como as sentinelas participam do processo, qualquer byte extra no string concatenado de "randomness" vai mudar o hash resultante.
 
@@ -146,7 +146,7 @@ O que acontece quando um nó responde um "randomness" que não corresponde ao pr
 
 Nós da rede com um comportamento fora do padrão sofrem consequências. Como assinaturas de validadores são requeridas a nível de protocolo, se um validador tentar quebrar as regras, é possível saber quem ele é por causa da assinatura e "cortá-lo" ("slashing") da rede.
 
-No momento o maior problema é um grupo de validadores sendo "cortados" e fazendo a atividade da rede parar por causa disso. Pode-se resolver o problema adicionando condiçoes extras na rede, por exemplo, se a rede quiser trocar o criador atual do bloco (caso ele tenha sido "cortado"), pelo menos 90% dos validadores da rede precisam assinar uma transação consentindo com a troca, sempre mantendo o consenso da maioria.
+No momento o maior problema é um grupo de validadores sendo "cortados" e fazendo a atividade da rede parar por causa disso. Pode-se resolver o problema adicionando condições extras na rede, por exemplo, se a rede quiser trocar o criador atual do bloco (caso ele tenha sido "cortado"), pelo menos 90% dos validadores da rede precisam assinar uma transação consentindo com a troca, sempre mantendo o consenso da maioria.
 
 TODO: precisamos listar todos os edge cases aqui (verbatim do Ita)
 
@@ -155,6 +155,4 @@ TODO: precisamos listar todos os edge cases aqui (verbatim do Ita)
 No código atual, a classe BlockManager é a classe que mantém e aplica toda a lógica do rdPoS. O motor de "randomness" está em `utils/random.h` e também inclui embaralhamento de vetores.
 
 No momento está sendo feito um protótipo rodando de forma centralizada.
-
-TODO: provavelmente isso aqui vai continuar? Quando surgirem mais informações colocamos aqui
 
