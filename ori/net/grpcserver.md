@@ -1,30 +1,30 @@
-# Arquivo net/grpcServer.md
+# File net/grpcServer.md
 
-## Sobre o objeto grpcServer
+## About the object grpcServer
 
-O objeto 'grpcServer' têm o objetivo principal de receber as solicitações da _Rede Principal_ do AvalancheGo, a comunicação entre o Node e a rede é feita pelo mecanismo [**'Protocol Buffers'**](https://developers.google.com/protocol-buffers) do Google e [gRPC](https://grpc.io/), as mensagens são recepcionadas a partir da implementação dos métodos de ```VMServiceImplementation``` que retornam pacotes esperados pela VM.
+The main purpose of 'grpcServer' is to receive requests from _MainNet_ (AvalancheGo), the communication between the Node and the network is through [**'Protocol Buffers'**](https://developers.google.com/protocol-buffers) from Google and [gRPC](https://grpc.io/), the message structure implements the methods from ```VMServiceImplementation``` with the expected packets by the VM.
 
-Esta classe não inicializa nenhuma solicitação direta ao AvalancheGo, apesar de algumas solicitações darem inicio a processos que podem solicitar o AvalancheGo diretamente (veja [grpcClient](grpcClient.md) para mais informações sobre solicitar dados ao AvalancheGo).
+This class doesn't send any request to AvalancheGo by itself, even though some requests may start procedures needing later to request the AvalancheGo (see grpcClient for more information about requesting directly to AvalancheGo).
 
-Exemplos de ```VMServiceImplementation``` e redirecionamento da rede podem ser encontradas em **_src/subnet.cpp_**.
+Examples of ```VMServiceImplementation``` and request forwarding can be found at **_src/subnet.cpp_**.
 
-**_Atenção:_** A estrutura de como é trafegado as solicitações podem ser encontradas em **vm.proto**.
+**_Note:_** The base structure of the expected behaviour of requests can be found at **vm.proto**.
 
-## Inicialização
+## Initialization
 
-É Inicializado em ```Subnet::start``` e seu construtor recebe apenas o ponteiro da classe ```Subnet```, após o Node terminar o processo de inicialização do mesmo, é emitido em terminal o IP e Porta no trecho ```std::cout << "1|20|tcp|" << server_address << "|grpc\n" << std::flush;``` para que a máquina virtual capture e registre a subnet.
+Initialized at ```Subnet::start``` the constructor only inherit the ```Subnet``` instance, after the Node finish initializing itself the binary outputs in terminal the IP and port ```std::cout << "1|20|tcp|" << server_address << "|grpc\n" << std::flush;``` so the VM can register the Node connection.
 
-## Membros da classe grpcServer
+## Class Members of grpcServer
 
-Todos os membros desta classe correspondem a implementação de ```VMServiceImplementation``` que em algum momento a AvalancheGo pode solicitar, porem o Node **não utiliza todas as chamadas do AvalancheGo**, e para esses casos é retornado ```Status::OK```.
+Every method in code of this class is a direct implementation of ```VMServiceImplementation```, at any time the AvalancheGo can request the implemented methods, even though the **Node doesn't have all API Calls of AvalancheGo**. 
 
 ### grpcServer: Initialize
 
-Quando a _Rede Principal_ solicita este método significa que o Node faz parte da rede, e que a inicialização seja finalizada.
+When the _Mainnet_ make this request means the network recognised the Node, and the _complete_ initialization can begin.
 
 ### grpcServer: SetState
 
-"_É sinalizado ao Node através do AvalancheGo a situação que o Node se encontra, sendo os estados de:_"
+"_The Mainnet can emit the current stage it is in, the following:_"
 
 ```json
 {
@@ -37,69 +37,70 @@ Quando a _Rede Principal_ solicita este método significa que o Node faz parte d
 }
 ```
 
-Apesar da citação acima o sistema não possuí suporte para esta solicitação, em toda via retorna o bloco mais recente.
+Despite the quote above, the system does not support this request, it always returns the most recent block.
 
 ### grpcServer: BuildBlock
 
-Solicitação de criação para um novo bloco (veja [core/subnet.md](../core/subnet.md) no método _blockRequest_).
+Request to create a new block (see [core/subnet.md](../core/subnet.md) section _blockRequest_).
 
 ### grpcServer: ParseBlock
 
-Faz a análise do bloco, esteja ele tanto no 'Chain Head' quanto 'Chain tip' (veja [core/subnet.md](../core/subnet.md) no método _ParseBlock_).
+Parse the block, must be in 'Chain Head' or 'Chain Tip' (see [core/subnet.md](../core/subnet.md) section _ParseBlock_).
 
 ### grpcServer: StateSyncEnabled
 
-Solicita se o 'StateSync' está habilitado, por padrão é retornado ```true```.
+Asks if 'StateSync' is enabled, by default it returns ```true```.
 
-**_Atenção:_** Foi solicitado a documentação dessa chamada, porém os responsáveis não retornaram.
+**_Caution_**: Documentation of this call was requested, but those responsible did not return.
 
 ### grpcServer: SetPreference
 
-Ajusta a preferência (ou melhor candidato) do bloco presente em 'Chain Tip', posteriormente o **_acceptBlock_** irá dar início a adição do bloco ao 'Chain Head' (veja [core/chainTip.md](../core/chainTip.md) no método _setPreference_).
+Sets the preferred (or best candidate) block in 'Chain Tip', later the function **acceptBlock** will add this block in 'Chain Head' (See [core/chainTip.md](../core/chainTip.md) section _setPreference_).
 
 ### grpcServer: Version
 
-Retorna a versão da 'Block-chain' que o Node pode ser representado, qualquer valor arbitrário de versionamento não retorna erros ou incompatibilidade.
+Returns the version of 'Block-chain', of the Node, any arbitrary value does not return errors or incompatibility.
 
 ### grpcServer: GetBlock
 
-Quando informado o Hash do bloco pela _Rede Principal_, é retornado o bloco esteja ele na 'Chain Head' ou 'Chain Tip' (veja [core/subnet.md](../core/subnet.md) no método _getBlock_).
+When the _Mainnet_ send the Hash any block its returned the block, either present in both 'Chain Head' or 'Chain Tip' (see [core/subnet.md](../core/subnet.md) section _getBlock_).
 
 ### grpcServer: GetAncestors
 
-Retorna uma lista de blocos baseando-se nos critérios de 'depth', 'size' e 'time' (veja [core/subnet.md](../core/subnet.md) no método _getAncestors_).
+Return a list of blocks based on the criteria of 'depth', 'size' and 'time' (see [core/subnet.md](../core/subnet.md) section _getAncestors_).
 
 ### grpcServer: BlockVerify
 
-A _rede principal_ envia um bloco ao Node, se o bloco fazer parte da sequência será adicionado ao 'Chain Tip' (veja [core/subnet.md](../core/subnet.md) no método _verifyBlock_).
+The _Mainnet_ sends a block to the Node, if the block's origins matches the current 'Chain Head', it will be added to 'Chain Tip' (see [core/subnet.md](../core/subnet.md) section _verifyBlock_).
 
 ### grpcServer: BlockAccept
 
-É enviado o Hash do bloco já presente em 'Chain Tip' e em sequência adicionado ao 'Chain Head' (veja [core/subnet.md](../core/subnet.md) no método _acceptBlock_).
+The _Mainnet_ sends a Hash of a previously in 'Chain Tip' and subsequently added to 'Chain Head' (see [core/subnet.md](../core/subnet.md) section _acceptBlock_).
 
 ### grpcServer: BlockReject
 
-Marca um bloco já presente na 'Chain Tip' com ```BlockStatus::rejected```.
+Flags a block already present in 'Chain Tip' with the status ```BlockStatus::rejected```.
 
-### grpcServer: BatchedParseBlock
+### grpcServer: BatchedPaseBlock
 
-Realiza o processo de 'ParseBlock' na sequência que os blocos foram enviados pela _Rede Principal_.
+Same procedure found in 'ParseBlock' but in sequence of the blocks sent by the _Mainnet_.
 
 ### grpcServer: Connected
 
-Adiciona as credênciais de outro Node a lista de Nodes conectados acessíveis do AvalancheGo.
+Add the credentials of another Node connected in AvalacheGo to the list of connected Nodes.
 
-### grpcServer: Disconnected
+### grpcServer: Disconnect
 
-Remove um Node da lista de Nodes conectados acessíveis do AvalancheGo.
+Removes a given Node from the list of connected Nodes.
 
 ### grpcServer: Shutdown
 
-Sinal de desligamento enviado pela _Rede Principal_, dá início ao processo em ```Subnet::shutdown```.
+The _Mainnet_ emit the shutdown signal, triggering the ```Subnet::shutdown```.
 
-## Funções não utilizadas pela Subnet
+## API Calls not implemented by Subnet
 
-A lista a seguir corresponde a todas as funções com resposta vazia ```Status::OK```, pois o sistema não utiliza dessas funções ou não foi implementado.
+Every item on the following list returns an empty request with ```Status::OK```, because the system does not use those functions or wasn't implemented.
+
 
 * AppGossip
 * VerifyHeightIndex

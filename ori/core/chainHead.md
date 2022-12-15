@@ -1,59 +1,59 @@
-# Arquivo core/chainHead.md
+# File core/chainHead.md
 
-## Sobre o objeto ChainHead
+## About the object ChainHead
 
-A 'Chain Head' ou 'Cabeçalho da Chain' é representada por uma coleção de registros dos blocos, onde transações, contratos, e contas são armazenados nos blocos criados pela própria _Rede Principal_, outros Nodes ou ele mesmo, esses registros não podem ser alterados e estão ali apenas para leitura/consulta.
+The 'ChainHead' or 'Header of the Blockchain' is represented by a collection of records of blocks, where transactions, contracts and accounts are stored in blocks created by the Mainnet, other Nodes or by itself, those records cannot be changed and is accessible only to read/query.
 
-A gravação de novos registros é feito pelos processos da classe 'Chain Tip' (consulte [chainTip](chainTip.md) para mais detalhes), de forma simplificada recebemos novos blocos (contendo transações), e guardamos eles.
+The creation of new records are made through the processes in the class 'Chain Tip' (see [chainTip](chainTip.md) for more details), in a simplified new blocks are created (containing data about transactions, contract data and accounts), and appended to.
 
-A leitura dos registros é feita em diversos lugares do sistema, pode-se afirmar que o 'Chain Head' junto do 'DB' são o ponto final do historico das operações realizadas no ecossistema.
+The querying of the data is made in multiple functions of the system, it can be affirmed the 'ChainHead' together with 'DB' are the final goal of the procedures done in the ecosystem.
 
-## Inicialização
+## Initialization
 
-O 'chainHead' recebe a instância da base de dados ```DBService dbServer```, durante a inicialização do Node em ```Subnet::initialize```, onde é descarregado todos os registros armazenados em uma inicialização anterior, se a base de dados (DB) estiver vazia é criado o ```Block genesis``` com validadores de teste local.
+The 'ChainHead' receives an instance of the database ```DBService dbServer``` during the initialization of the Node in ```Subnet::inititalize```, where every record is restored from a previous initialization, if the database (DB) is empty a ```Block genesis``` is created with testing local validators.
 
-Após recuperar os dados do DB é inicializado uma rotina de back-up (veja **_periodicSaveToDB_**) a cada 15 segundos.
+After the initializatio is done, a back-up routine is started every 15 seconds the data is saved (see **_periodicSaveToDB_**).
 
-## Membros da classe ChainHead
+## Class members of ChainHead
 
-Todas as funções com excessão dos métodos **_push_back_**, **_pop_back_** e **_dumpToDB_** são apenas para leitura ou consulta de transações, ou blocos inteiros.
+All the functions with exception to the methods **_push_back_**, **_pop_back_** and **_dumpToDB_** are read-only.
 
-### Chain Head: push_back
+### ChainHead: push_back
 
-Quando um bloco novo é aceito, ele é movido para o fim do 'Chain Head'.
+When a new block is accepted, it is moved to the end of 'ChainHead'.
 
-### Chain Head: pop_back
+### ChainHead: pop_back
 
-Remove o último bloco aceito pela rede.
+Removes the last block accepted by the network.
 
-### Chain Head: exists [overflow]
+### ChainHead: exists [overflow]
 
-Verifica se o bloco existe pelo Hash do bloco ou pela posição dele (```nHeight```).
+Verifies if the block exists by the Hash or its 'number height' (```nHeight```).
 
-### Chain Head: getBlock [overflow]
+### ChainHead: getBlock [overflow]
 
-Retorna o bloco (ou se preferir ponteiro do bloco) a partir do Hash do bloco, ou a posição dele (```nHeight```).
+Returns the block (more especifically the block's pointer in memory) based on the Hash of the block, or its 'number height' (```nHeight```).
 
-### Chain Head: hasTransaction
+### ChainHead: hasTransaction
 
-Verifica se a transação foi processada a partir do Hash da transação.
+Verifies if the transaction was processed based on the Hash's transaction.
 
-### Chain Head: getTransaction
+### ChainHead: getTransaction
 
-Retorna os dados da transação a partir do Hash da transação (utiliza **_hasTransaction_** para verificar se ela foi processada).
+Returns the transaction's data based on the Hash of transaction (uses **_hasTransaction_** to verify if it was processed).
 
-### Chain Head: getBlockFromTx
+### ChainHead: getBlockFromTx
 
-Retorna o bloco que a transação pertence a partir do Hash da transação.
+Returns the block of a given Hash from the Transaction.
 
-### Chain Head: latest
+### ChainHead: latest
 
-Retorna o último bloco aprovado pela rede.
+Returns the latest block approved by the _Mainnet_.
 
-### Chain Head: periodicSaveToDB
+### ChainHead: periodicSaveToDB
 
-Rotina de 15 segundos que armazena os dados na base de dados. Essa rotina é inicializada no construtor da classe.
+A 15 seconds periodic save of the records in the database. This routine is initialized by the class constructor. 
 
-### Chain Head: dumpToDb
+### ChainHead: dumpToDb
 
-É armazenado todo o conteúdo na memória de volta a base de dados (DB), esse método é de uso exclusivo quando o Node inicia o processo de desligamento do mesmo em ```Subnet::stop```.
+Copy all the content in memory back to the database (DB), this method is only used when the Node start the shutdown procedure in ```Subnet::stop```.
