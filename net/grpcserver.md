@@ -4,7 +4,7 @@
 
 O objeto 'grpcServer' têm o objetivo principal de receber as solicitações da _Rede Principal_ do AvalancheGo, a comunicação entre o Node e a rede é feita pelo mecanismo [**'Protocol Buffers'**](https://developers.google.com/protocol-buffers) do Google e [gRPC](https://grpc.io/), as mensagens são recepcionadas a partir da implementação dos métodos de ```VMServiceImplementation``` que retornam pacotes esperados pela VM.
 
-Esta classe não inicializa nenhuma solicitação direta ao AvalancheGo, apesar de algumas solicitações darem inicio a processos que podem solicitar o AvalancheGo diretamente (veja grpcClient para mais informações sobre solicitar dados ao AvalancheGo).
+Esta classe não inicializa nenhuma solicitação direta ao AvalancheGo, apesar de algumas solicitações darem inicio a processos que podem solicitar o AvalancheGo diretamente (veja [grpcClient](grpcClient.md) para mais informações sobre solicitar dados ao AvalancheGo).
 
 Exemplos de ```VMServiceImplementation``` e redirecionamento da rede podem ser encontradas em **_src/subnet.cpp_**.
 
