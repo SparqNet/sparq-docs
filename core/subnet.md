@@ -115,7 +115,7 @@ Durante o processo de ```Subnet::start``` é inicializado um servidor gRPC (```s
 Após o AvalancheGo registrar a Subnet em sua lista de Nodes, ele sinalizará o comando ```rpc Initialize(InitializeRequest)``` que corresponde ao método ```Subnet::initialize``` do Subnet (Subnetooor), onde nele irá ser instanciado os membros:
 
 * DB
-* grpc Client
+* gRPC Client
 * State
 * ChainHead
 * ChainTip
