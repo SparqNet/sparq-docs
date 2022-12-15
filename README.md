@@ -18,7 +18,7 @@ Written and maintained by the developers of Sparq Labs Inc.:
 **1 - Concepts**
 * [1.1 - Sparq overview](ch1/1-1.md)
 * [1.2 - How Sparq works](ch1/1-2.md)
-* 1.3 - rdPoS
+* [1.3 - rdPoS](ch1/1-3.md)
 * 1.4 - Bridging
 
 **2 - Implementation**
