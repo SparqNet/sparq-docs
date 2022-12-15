@@ -14,9 +14,9 @@
 
 ## Sobre o objeto Subnet
 
-Conforme exemplificado anteriormente no [arquivo ponto de entrada](../src/main.md) a finalidade da classe Subnet é encapsular e redirecionar os módulos dos Nodes onde a Subnet atuará como um intermediador, a Subnet (Subnatooor) também atuará como uma engine de execução para aplicações de smart contracts em [Solidity](https://github.com/ethereum/solidity) com integração de múltiplas vias da Rede Subnets Sparq.
+Conforme exemplificado anteriormente no [arquivo ponto de entrada](../src/main.md) a finalidade da classe Subnet é encapsular e redirecionar os módulos dos Nodes onde a Subnet atuará como um intermediador, a Subnet (Subnetooor) também atuará como uma engine de execução para aplicações de smart contracts em [Solidity](https://github.com/ethereum/solidity) com integração de múltiplas vias da Rede Subnets Sparq.
 
-Atualmente a única integração de comunicação dos Nodes é dependente das VM (Virtual Machines, mais em [AvalancheGo](https://github.com/ava-labs/avalanchego/tree/master/vms)) da [AvaLabs](https://www.avalabs.org/), e está sendo desenvolvido uma comunicação de Ponta-A-Ponta entre as Subnets (Subnatooor) e também um modelo de requisições para que outras Subnets realizem a conexão e comuniquem entre sí.
+Atualmente a única integração de comunicação dos Nodes é dependente das VM (Virtual Machines, mais em [AvalancheGo](https://github.com/ava-labs/avalanchego/tree/master/vms)) da [AvaLabs](https://www.avalabs.org/), e está sendo desenvolvido uma comunicação de Ponta-A-Ponta entre as Subnets (Subnetooor) e também um modelo de requisições para que outras Subnets realizem a conexão e comuniquem entre sí.
 
 ## O Papel do AvalancheGO Daemon
 
@@ -112,10 +112,10 @@ Durante o processo de ```Subnet::start``` é inicializado um servidor gRPC (```s
 
 ## Inicialização
 
-Após o AvalancheGo registrar a Subnet em sua lista de Nodes, ele sinalizará o comando ```rpc Initialize(InitializeRequest)``` que corresponde ao método ```Subnet::initialize``` do Subnet (Subnatooor), onde nele irá ser instanciado os membros:
+Após o AvalancheGo registrar a Subnet em sua lista de Nodes, ele sinalizará o comando ```rpc Initialize(InitializeRequest)``` que corresponde ao método ```Subnet::initialize``` do Subnet (Subnetooor), onde nele irá ser instanciado os membros:
 
 * DB
-* grpc Client
+* gRPC Client
 * State
 * ChainHead
 * ChainTip
@@ -178,11 +178,9 @@ Conforme citado anteriormente nos tópicos '**Pre-Inicialização**' e '**Inicia
 
 ### Subnet: SetState
 
-Quando um Node finaliza o ```Subnet::initialize``` a _Rede Principal_ verifica se o Node está sincronizado, se não estiver o mesmo envia o 'State' da chain, isso inclui informações sobre balanço, contrato e afins.
+Conforme o código-fonte do AvalancheGo que implementa **_proto/vm.proto_**, esse método é chamado quando a _Rede Principal_ precisa sinalizar qual a situação que a rede se encontra (veja [net/grpcserver.md](../net/grpcserver.md) para o ID dos estados).
 
-Novos blocos são recebidos também pelo SetState, diferente da sincronização por esse método é emitido (Broadcast) a todos os Nodes.
-
-**_Atenção:_** Comportamento descrito é apenas o esperado de **setState**, por hora quando o AvalancheGo solicita setState retornamos apenas as informações do último bloco, vale ressaltar que a Rede Principal pode solicitar se o Node têm habilitado a sincronização por State ```StateSyncEnabled``` que se encontra desativado, fazendo com que a Rede Principal faça a sincronização pelos canais **_parseBlock_** e **_acceptBlock_** (observe a funcionalidade de **_parseBlock_** e **_acceptBlock_** que se condiz com a sincronização de blocos).
+**_Atenção_**: Atualmente não implementado devido implementação recente por parte da Avalabs.
 
 ### Subnet: ParseBlock
 
@@ -262,9 +260,9 @@ C1 --"return true"--> MN2
 ERR --> R3
 R3 --"return false"--> MN2
 ```
-**_Atenção ¹:_** Não é rejeitado Blocos no futuro (Unknown), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
+**_Atenção ¹:_** Não é rejeitado Blocos no futuro (Unknown ou nHeight maior que o esperado), pois o AvalancheGo irá negar o reenvio do mesmo bloco quando em um segundo momento que o bloco é valido para análise.
 
-**_Atenção ²:_** ParseBlock **não realiza verificação da lógica das transações**, apenas se as assinaturas são validas.
+**_Atenção ²:_** 'ParseBlock' **não realiza verificação da lógica das transações**, apenas se as assinaturas são validas.
 
 ### Subnet: acceptBlock
 
@@ -288,11 +286,11 @@ Faz a validação de uma transação, exclusivo apenas para Nodes da Subnet (Sub
 
 Faz a validação das transações do bloco, se o Hash do novo bloco têm como bloco anterior o último bloco da 'Chain Head', se sua altura númérica está sequenciada, e se a assinatura do bloco é coerente ao validador primário na lista de Nodes conectados.
 
-Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip', e o Subnet (Subnatooor) retorna ```Status: Ok```.
+Se todas condições forem satisfeitas o bloco será adicionado ao 'Chain Tip'.
 
 ### Subnet: getAncestors
 
-Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida até o bloco mais recente.
+Verifica as origens do bloco por sua 'depth', 'size' e 'time', se o bloco existir dentro do 'Chain Head' é feito uma verificação do ponto de partida (usando a posição do bloco fornecido) até o bloco mais recente.
 
 ### Subnet: getBlock
 

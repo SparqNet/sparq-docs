@@ -1,0 +1,158 @@
+# rdPoS - Random Deterministic Proof of Stake
+
+This document explains the rdPoS (Random Deterministic Proof of Stake) algorithm, used by the Sparq network.
+
+* [Blockchains overview](#blockchains-overview)
+* [How rdPoS works](#how-rdpos-works)
+* [Validator implementations](#validator-implementations)
+  * [Decentralized](#decentralized)
+  * [Centralized](#centralized)
+  * [Semi-decentralized](#semi-decentralized)
+* [Slashing](#slashing)
+* [rdPoS implementation](#rdpos-implementation)
+
+## Blockchains overview
+
+One of the biggest problems of blockchain development is having to deal with "rollbacks".
+
+For example, on the Bitcoin chain, assuming there is a "latest" block that has another block after it. If a node receives a block that replaces the "latest" block, the next block and all the transactions in it are replaced too, which results in a rollback of the blockchain state by one block.
+
+The Bitcoin and derived chains follow the "longest lived chain" rule (the biggest chain, the one with the most accumulated proof of work, is the main chain), however, rollbacks introduce problems with that rule. For example, when creating DApps where the developer has to deal with such special conditions, which can require a bigger effort depending on the size/complexity of the application.
+
+```mermaid
+flowchart LR
+
+C1[C]
+B1[B]
+A1[A]
+
+A2[A]
+B2[B]
+C2[C]
+D2[D]
+E2[E]
+
+A3[A]
+B3[B]
+C3[C]
+D3[D]
+E3[E]
+
+subgraph graphB
+direction BT
+    A2 --> B2
+    B2 --- C2
+    D2 --> E2
+    B2 --- D2
+
+    linkStyle 1 stroke-width:0, fill:none;
+    linkStyle 3 stroke-width:0, fill:none;
+end
+
+subgraph graphA
+direction BT
+    A1 --> B1
+    B1 --> C1
+end
+
+subgraph graphC
+    direction BT
+    AI[ ] --- BI[ ]
+    BI[ ] --- C3
+    C3 --- EI[ ]
+    A3 --> B3
+    B3 --> D3
+    D3 --> E3
+
+    style AI fill:#FFFFFF00, stroke:#FFFFFF00;
+    style BI fill:#FFFFFF00, stroke:#FFFFFF00;
+    style EI fill:#FFFFFF00, stroke:#FFFFFF00;
+
+    linkStyle 6 stroke-width:0, fill:none;
+    linkStyle 7 stroke-width:0, fill:none;
+    linkStyle 8 stroke-width:0, fill:none;
+end
+
+graphA --> graphB
+graphB --> graphC
+```
+
+In the above diagram, block C was replaced by block D followed by block E, rolling back the transactions made in block C.
+
+The solution to the problem is avoiding the rollback condition altogether. This can be done by deterministically defining which network node can create a block, thus a "block race condition" never happens and everyone in the network stays synced to the same block.
+
+## How rdPoS works
+
+A block in an rdPoS network is created following certain rules:
+
+1) Get a list of network validators and randomly sort the list, using the "randomness" seed from the previous block.
+
+![RandomListCreation](img/RandomListCreation.png)
+
+2) The first validator from the list will be the block creator, while the others (at least 4) will create a random 32 byte string and make two transactions with it: one containing the hash of said string, and another containing the string itself, both signed.
+
+![HashTransactionBroadcast](img/HashTransactionBroadcast.png)
+
+![RandomTransactionBroadcast](img/RandomTransactionBroadcast.png)
+
+3) The hashes are verified to make sure they match their respective random strings.
+
+![HashKnowledgeProof](img/HashKnowledgeProof.png)
+
+4) A new block is created by the first validator, concatenating and hashing the other validators' random strings to create a new "randomness" seed that will be used next time on step 1.
+
+![BlockRandomness](img/BlockRandomness.png)
+
+![NewBlock](img/NewBlock.png)
+
+5) The block is signed and published to the network by the first validator, while the other validators verify if all transaction signatures (random and hashed) correspond to the list in step 1.
+
+For the genesis block (the first block in the chain), since there are no validators in the network, the "randomness" seed is hardcoded. Also, to bootstrap the network, at least 5 hardcoded validators are required as well, since each block requires at least 4 validators for signing and one for signing the block itself.
+
+## Validator implementations
+
+How validators are added to the network is up to the developer, but there are three implementations that are provided: *decentralized*, *centralized*, and *semi-decentralized*.
+
+### Decentralized
+
+In a decentralized implementation, **all validators are forced to take part in block creation** to make sure there won't be collusions.
+
+A totally decentralized network using rdPoS can be potentially flawed when the number of validators on the network reaches a certain number (10000, for example) - the latency between those nodes can become a problem.
+
+To solve this, the block time in a decentralized network needs to be bigger (between 15 and 30 seconds, for example), so all the nodes have enough time to answer.
+
+Validators can be added to the network by locking a certain amount of tokens in the BlockManager contract (the class that has the rdPoS logic).
+
+### Centralized
+
+In a centralized implementation, every network has a "master address" that can add as many validators as desired - in this case, the developer, who has the responsibility of keeping the chain up and running.
+
+The recommended number of nodes for this implementation is at least 32, but more or less nodes can be used depending on the necessity of the application.
+
+### Semi-decentralized
+
+In a semi-decentralized implementation, both validator types are used:
+
+* A normal validator, simply called "validator", similar to the decentralized one and added to the network the same way (locking tokens); and
+* A validator called "sentinel", similar to the centralized one and added to the network the same way (with a "master address").
+
+The difference is neither validators nor sentinels can create a block on their own - the "randomness" requires *at least one* of the transactions from a sentinel, and whoever will publish the block is forced to follow the validator list order.
+
+This makes it possible to have a smaller number of validators on the network (16, for example), requiring less computing power to verify, but keeping a high security profile. Since sentinels take part in the process, every extra byte in the concatenated "randomness" seed will change the resulting hash.
+
+## Slashing
+
+What happens when a node answers with a "randomness" that does not match its own hash? Or when a node creates an invalid block with invalid transactions? Or when a node can't create a block before reaching the network's time limit?
+
+Misbehaving network nodes suffer consequences. Since validator signatures are required at protocol level, if a validator tries to break the rules, it's possible to know who it is due to the signature and "slash" it from the network.
+
+At the moment the biggest problem is a group of validators being "slashed" and halting network activity because of that. The problem can be solved by adding extra conditions to the network, for example, if the network wants to change the current block creator (in case it's been "slashed"), at least 90% of the validators in the network have to sign a transaction consenting with the change, always maintaining the majority's consensus.
+
+TODO: we have to list all the edge cases here
+
+## rdPoS implementation
+
+With the current code, the BlockManager class maintains and applies all the rdPoS logic. The "randomness" engine is in  `utils/random.h` and also includes vector sorting.
+
+At the moment there is a prototype of a centralized implementation.
+
