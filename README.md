@@ -22,13 +22,13 @@ Written and maintained by the developers of Sparq Labs Inc.:
 * [1.4 - Bridging](ch1/1-4.md)
 
 **2 - Implementation**
-* 2.1 - Implementation overview
-* 2.2 - Transaction
-* 2.3 - Block
+* [2.1 - Implementation overview](ch2/2-1.md)
+* [2.2 - Transaction](ch2/2-2.md)
+* [2.3 - Block](ch2/2-3.md)
 * 2.4 - Validator
 * 2.5 - BlockManager
-* 2.6 - Mempool/ChainTip
-* 2.7 - Blockchain/ChainHead
+* [2.6 - Mempool/ChainTip](ch2/2-6.md)
+* [2.7 - Blockchain/ChainHead](ch2/2-7.md)
 
 **3 - Networking**
 * 3.1 - Networking overview
