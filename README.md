@@ -37,7 +37,7 @@ Written and maintained by the developers of Sparq Labs Inc.:
 * 3.4 - P2P
 
 **4 - Tools and utilities**
-* 4.1 - The Utils class
-* 4.2 - Merkle and Patricia Trees
-* 4.3 - Database structure
+* [4.1 - The Utils class](ch4/4-1.md)
+* [4.2 - Merkle and Patricia Trees](ch4/4-2.md)
+* [4.3 - Database structure](ch4/4-3.md)
 
