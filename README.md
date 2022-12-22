@@ -1,6 +1,6 @@
-# Sparq Docs - EN-US
+# SparqNet Docs - EN-US
 
-This is the English version of the Sparq docs.
+This is the English version of the SparqNet docs.
 
 Se está procurando pela versão em Português do Brasil, cheque o branch `pt-br`.
 
