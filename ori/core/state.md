@@ -53,6 +53,6 @@ If any condition fails ```false``` is returned.
 
 ### State: validateTransactionForRPC
 
-Performs the same validations that **_validateTransactionForBlock_** however it's exclusively used Nodes from **Sparq Network** ecosystem.
+Performs the same validations that **_validateTransactionForBlock_** however it's exclusively used Nodes from **SparqNet** ecosystem.
 
 **_Warning_**: This operation does not change the Block-chain State.
