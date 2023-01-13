@@ -20,6 +20,7 @@ Written and maintained by the developers of Sparq Labs Inc.:
 * [1.2 - How SparqNet works](ch1/1-2.md)
 * [1.3 - rdPoS](ch1/1-3.md)
 * [1.4 - Bridging](ch1/1-4.md)
+* [1.5 - Contracts](ch1/1-5.md)
 
 **2 - Implementation**
 * [2.1 - Implementation overview](ch2/2-1.md)
