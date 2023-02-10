@@ -15,7 +15,7 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 **2 - Base components**
 * [2.1 - Transactions and Blocks](ch2/2-1.md)
 * [2.2 - Merkle and Patricia Trees](ch2/2-2.md)
-* 2.3 - Secp256k1, RandomGen and SafeHash
+* [2.3 - Secp256k1, RandomGen and SafeHash](ch2/2-3.md)
 * [2.4 - Database](ch2/2-4.md)
 * [2.5 - Hex, FixedStr and derivatives](ch2/2-5.md)
 * 2.6 - The Utils class
