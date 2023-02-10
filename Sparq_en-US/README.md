@@ -18,7 +18,7 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 * [2.3 - Secp256k1, RandomGen and SafeHash](ch2/2-3.md)
 * [2.4 - Database](ch2/2-4.md)
 * [2.5 - Hex, FixedStr and derivatives](ch2/2-5.md)
-* 2.6 - The Utils class
+* [2.6 - The Utils namespace](ch2/2-6.md)
 
 **3 - Contracts**
 * [3.1 - Contracts in Sparq](ch3/3-1.md)
