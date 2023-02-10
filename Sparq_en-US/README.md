@@ -32,7 +32,8 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 * 4.5 - Blockchain
 
 **5 - Networking**
-* 5.1 - gRPC
-* 5.2 - HTTP
-* 5.3 - P2P
+* [5.1 - RLP](ch5/5-1.md)
+* 5.2 - gRPC
+* 5.3 - HTTP
+* 5.4 - P2P
 
