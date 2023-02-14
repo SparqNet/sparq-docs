@@ -28,8 +28,8 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 * [4.1 - Storage](ch4/4-1.md)
 * [4.2 - rdPoS](ch4/4-2.md)
 * [4.3 - SnowmanVM](ch4/4-3.md)
-* 4.4 - State
-* 4.5 - Blockchain
+* [4.4 - State](ch4/4-4.md)
+* [4.5 - Blockchain](ch4/4-5.md)
 
 **5 - Networking**
 * [5.1 - RLP](ch5/5-1.md)
