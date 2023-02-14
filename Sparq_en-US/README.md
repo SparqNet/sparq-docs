@@ -22,7 +22,7 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 
 **3 - Contracts**
 * [3.1 - Contracts in Sparq](ch3/3-1.md)
-* 3.2 - Solidity ABI
+* [3.2 - Solidity ABI](ch3/3-2.md)
 
 **4 - Sparq's core**
 * [4.1 - Storage](ch4/4-1.md)
