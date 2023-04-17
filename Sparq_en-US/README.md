@@ -35,5 +35,5 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 * [5.1 - RLP](ch5/5-1.md)
 * 5.2 - gRPC
 * 5.3 - HTTP
-* 5.4 - P2P
+* [5.4 - P2P](ch5/5-4.md)
 
