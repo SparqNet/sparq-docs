@@ -21,10 +21,13 @@ A minimum basic knowledge of **UML** concepts is recommended, as some parts have
 * [2.6 - The Utils namespace](ch2/2-6.md)
 
 **3 - Contracts**
-* [3.1 - Contracts in Sparq](ch3/3-1.md)
-* [3.2 - Rules for building Contracts](ch3/3-2.md)
-* [3.3 - How to create a Contract](ch3/3-3.md)
-* [3.4 - Solidity ABI](ch3/3-4.md)
+* [3.1 - Contracts in OrbiterSDK](ch3/3-1.md)
+* [3.2 - Contract rules overview](ch3/3-2.md)
+* [3.3 - Setting up the development environment](ch3/3-3.md)
+* [3.4 - Creating a Dynamic Contract (Simple)](ch3/3-4.md)
+* [3.5 - Creating a Dynamic Contract (Advanced)](ch3/3-5.md)
+* [3.6 - Creating a Protocol Contract (Advanced)](ch3/3-6.md)
+* [3.7 - Solidity ABI](ch3/3-7.md)
 
 **4 - Sparq's core**
 * [4.1 - Storage](ch4/4-1.md)
