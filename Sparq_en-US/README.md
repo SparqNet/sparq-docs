@@ -40,7 +40,4 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 
 **5 - Networking**
 * [5.1 - RLP](ch5/5-1.md)
-* 5.2 - gRPC
-* 5.3 - HTTP
-* [5.4 - P2P](ch5/5-4.md)
-
+* [5.2 - P2P](ch5/5-2.md)
