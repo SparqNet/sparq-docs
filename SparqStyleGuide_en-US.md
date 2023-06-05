@@ -90,10 +90,6 @@ std::string isNeg(x) { return (x < 0) ? "negative" : "positive"; }
 
 If you need to, do it but *please* leave a comment above it so the real type is known.
 
-## Const correctness
-
-TODO: this is a PITA to analyze but there's a *lot* of `const`s everywhere in code, maybe most of them are unnecessary but I lack knowledge on that so I can't tell
-
 ## Comments
 
 **Write self-documenting code, but DO comment it when required, just don't overdo it**. Use your discernment. Comments should *complement* code, not turn it into a [word soup](https://i.ytimg.com/vi/wLZ01zcwbr0/hqdefault.jpg).
@@ -102,7 +98,7 @@ Don't forget to **follow line width and indentation**. Both single-line and mult
 
 **Don't be afraid to express yourself**. No one will ban you for saying bad words, jsut don't overdo it. Sometimes coding is a PITA and we just *have* to emphasize the A with some other flavors of swearing on top. It helps with catharsis.
 
-TODO: I don't know if we'll integrate Doxygen after all, but if we do it'd be better to use its [commenting style](https://www.doxygen.nl/manual/docblocks.html).
+When commenting documentation for Doxygen, use its [commenting style](https://www.doxygen.nl/manual/docblocks.html).
 
 ## File organization
 
