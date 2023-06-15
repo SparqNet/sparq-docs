@@ -2,7 +2,7 @@
 
 This folder contains an introduction to the concepts of the Sparq network, from the most basic to the most detailed.
 
-*This is a living document*, so expect frequent small changes here and there, and always check the latest tag.
+*This is a living repository* - docs for fixed versions are tagged accordingly on the `main` branch, while the `development` branch is always keeping up with changes made in the project's own development branch. Always check the branch and tag you're in.
 
 ## Table of Contents
 
