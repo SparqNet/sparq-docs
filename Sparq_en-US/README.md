@@ -17,7 +17,7 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [2.2 - Merkle and Patricia Trees](ch2/2-2.md)
 * [2.3 - Secp256k1, RandomGen and SafeHash](ch2/2-3.md)
 * [2.4 - Database](ch2/2-4.md)
-* [2.5 - Hex, FixedStr and derivatives](ch2/2-5.md)
+* [2.5 - Hex, FixedBytes and derivatives](ch2/2-5.md)
 * [2.6 - The Utils namespace](ch2/2-6.md)
 
 **3 - Contracts**
@@ -40,4 +40,5 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 
 **5 - Networking**
 * [5.1 - RLP](ch5/5-1.md)
-* [5.2 - P2P](ch5/5-2.md)
+* [5.2 - P2P Overview](ch5/5-2.md) 
+* [5.3 - P2P Encoding](ch5/5-2.md)
