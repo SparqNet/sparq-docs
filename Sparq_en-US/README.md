@@ -36,9 +36,9 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [4.3 - SnowmanVM](ch4/4-3.md)
 * [4.4 - State](ch4/4-4.md)
 * [4.5 - Blockchain and Syncer](ch4/4-5.md)
-* [4.6 - Contract and ContractManager](ch4/4-6.md)
 
 **5 - Networking**
 * [5.1 - RLP](ch5/5-1.md)
-* [5.2 - P2P Overview](ch5/5-2.md) 
+* [5.2 - P2P Overview](ch5/5-2.md)
 * [5.3 - P2P Encoding](ch5/5-2.md)
+
