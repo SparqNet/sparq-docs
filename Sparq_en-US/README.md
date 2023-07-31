@@ -18,7 +18,7 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [2.3 - Secp256k1, RandomGen and SafeHash](ch2/2-3.md)
 * [2.4 - Database](ch2/2-4.md)
 * [2.5 - Hex, FixedBytes and derivatives](ch2/2-5.md)
-* [2.6 - The Utils namespace](ch2/2-6.md)
+* [2.6 - Logger and the Utils namespace](ch2/2-6.md)
 
 **3 - Contracts**
 * [3.1 - Contracts in Sparq](ch3/3-1.md)
