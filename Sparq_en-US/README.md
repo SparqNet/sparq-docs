@@ -9,16 +9,19 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 **1 - General concepts**
 * [1.1 - What is Sparq](ch1/1-1.md)
 * [1.2 - How consensus works](ch1/1-2.md)
-* [1.3 - Bridging](ch1/1-3.md)
-* [1.4 - Code structure](ch1/1-4.md)
+* [1.3 - How rdPoS works](ch1/1-3.md)
+* [1.4 - Bridging](ch1/1-4.md)
 
-**2 - Base components**
-* [2.1 - Transactions and Blocks](ch2/2-1.md)
-* [2.2 - Merkle and Patricia Trees](ch2/2-2.md)
-* [2.3 - Secp256k1, RandomGen and SafeHash](ch2/2-3.md)
-* [2.4 - Database](ch2/2-4.md)
-* [2.5 - Hex, FixedBytes and derivatives](ch2/2-5.md)
-* [2.6 - Logger and the Utils namespace](ch2/2-6.md)
+**2 - OrbiterSDK**
+* [2.1 - Code structure and overview](ch2/2-1.md)
+    * [2.1.1 - The utils folder](ch2/2-1-1.md)
+    * [2.1.2 - The core folder](ch2/2-1-2.md)
+* [2.2 - Implementation details](ch2/2-2.md)
+    * [2.2.1 - Transactions and Blocks](ch2/2-2-1.md)
+    * [2.2.2 - Database structure and manipulation](ch2/2-2-2.md)
+    * [2.2.3 - RLP](ch2/2-2-3.md)
+    * [2.2.4 - P2P Overview](ch2/2-2-4.md)
+    * [2.2.5 - P2P Encoding](ch2/2-2-5.md)
 
 **3 - Contracts**
 * [3.1 - Contracts in Sparq](ch3/3-1.md)
@@ -29,16 +32,3 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [3.6 - Creating a Protocol Contract (Advanced)](ch3/3-6.md)
 * [3.7 - Solidity ABI](ch3/3-7.md)
 * [3.8 - Contract Tester](ch3/3-8.md)
-
-**4 - Core components**
-* [4.1 - Storage](ch4/4-1.md)
-* [4.2 - rdPoS](ch4/4-2.md)
-* [4.3 - SnowmanVM](ch4/4-3.md)
-* [4.4 - State](ch4/4-4.md)
-* [4.5 - Blockchain and Syncer](ch4/4-5.md)
-
-**5 - Networking**
-* [5.1 - RLP](ch5/5-1.md)
-* [5.2 - P2P Overview](ch5/5-2.md)
-* [5.3 - P2P Encoding](ch5/5-2.md)
-
