@@ -15,7 +15,8 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 **2 - OrbiterSDK**
 * [2.1 - Code structure and overview](ch2/2-1.md)
     * [2.1.1 - The utils folder](ch2/2-1-1.md)
-    * [2.1.2 - The core folder](ch2/2-1-2.md)
+    * [2.1.2 - The contract folder](ch2/2-1-2.md)
+    * [2.1.3 - The core folder](ch2/2-1-3.md)
 * [2.2 - Implementation details](ch2/2-2.md)
     * [2.2.1 - Transactions and Blocks](ch2/2-2-1.md)
     * [2.2.2 - Database structure and manipulation](ch2/2-2-2.md)
