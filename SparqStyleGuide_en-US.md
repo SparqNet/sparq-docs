@@ -84,6 +84,8 @@ std::string isNeg(x) { return (x < 0) ? "negative" : "positive"; }
 
 **Keep `&` and `*` glued to the type, not the name**. e.g. `int* a; std::string& b`, not `int *a; std::string &b`.
 
+**Class member variables should always contain a suffixed `_`**. e.g. `std::string name_; uint256_t value_;`. The reason is to avoid hard-to-detect cases like variable shadowing (SanitizerAddress).
+
 ## Auto keyword
 
 **DO NOT use "auto" as a type unless you have no other way out** (e.g. the line gets too big).
