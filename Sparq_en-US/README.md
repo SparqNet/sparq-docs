@@ -2,7 +2,7 @@
 
 This folder contains an introduction to the concepts of the Sparq network, from the most basic to the most detailed.
 
-*This is a living repository* - docs for fixed versions are tagged accordingly on the `main` branch, while the `development` branch is always keeping up with changes made in the project's own development branch. Always check the branch and tag you're in.
+*This is a living repository* - docs for fixed versions are tagged accordingly on the `main` branch, while the `development` branch is always keeping up with changes made in the project's own development branch (including subsequent branches made from it). Always check the branch and tag you're in.
 
 ## Table of Contents
 
@@ -29,6 +29,9 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [3.2 - Contract rules overview](ch3/3-2.md)
 * [3.3 - Setting up the development environment](ch3/3-3.md)
 * [3.4 - Creating a Dynamic Contract (Simple)](ch3/3-4.md)
+    * [3.4.1 - Simple Contract Header](ch3/3-4-1.md)
+    * [3.4.2 - Simple Contract Source](ch3/3-4-2.md)
+    * [3.4.3 - Deploying and Testing](ch3/3-4-3.md)
 * [3.5 - Creating a Dynamic Contract (Advanced)](ch3/3-5.md)
 * [3.6 - Creating a Protocol Contract (Advanced)](ch3/3-6.md)
 * [3.7 - Solidity ABI](ch3/3-7.md)
