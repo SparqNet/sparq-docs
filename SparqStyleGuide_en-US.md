@@ -27,11 +27,13 @@ This coding style is based on a mix of Supra's personal style guide, [Bitcoin's]
 
 ## Line width and indentation
 
-**Width**: 80 characters as a soft limit, 100 characters as a hard limit. The metric is [reading ergonomics](https://softwareengineering.stackexchange.com/a/222998).
+**Width**: Soft limit of ~80 characters, hard limit of ~120 characters. The metric is [reading ergonomics](https://softwareengineering.stackexchange.com/a/222998). When in doubt, use your feeling.
 
 **Indentation**: Soft tabs (spaces), 2 spaces per level.
 
-For (Neo)Vim users, you can use the following configs:
+### Vim/Neovim
+
+You can use the following configs:
 
 * `set textwidth=80` (visual aid for the width limit)
 * `set colorcolumn=+1` (offset for visual aid - not required but handy)
@@ -39,6 +41,8 @@ For (Neo)Vim users, you can use the following configs:
 * `set shiftwidth=2` (number of spaces for each indent made with `<<` or `>>`)
 * `set tabstop=2` (number of spaces inserted when pressing Tab)
 * `set softtabstop=2` (number of spaces the cursor will move after pressing Tab - [here's a better explanation](https://vi.stackexchange.com/a/28017) but keeping it the same as tabstop is fine)
+
+You can also select a range of lines with `SHIFT-V` and press `=` to automatically rearrange indentation (not always 100% accurate but helps ease a lot the burden of dealing with large blocks of irregular indentation levels).
 
 ## Brace style, one-liners and ternary operators
 
@@ -50,7 +54,7 @@ For (Neo)Vim users, you can use the following configs:
 
 All the following examples are OK:
 
-```
+```c++
 std::string isNeg(x) {
   if (x < 0) {
     return "negative";
@@ -80,15 +84,13 @@ std::string isNeg(x) { return (x < 0) ? "negative" : "positive"; }
 
 ## Variables and functions
 
-**Keep names short and to the point where possible**. It'll heavily depend on the occasion, but overall just use your discernment. Counters inside loops, for example, can be pretty short (e.g. `for (int i = 0; i < 10; i++)`), while "for each" loops can be a bit more verbose (e.g. `for (std::string item : items)`). What matters is to be clear and concise.
+**Keep names short and to the point where possible**. It'll heavily depend on the occasion, but overall just use your discernment. Counters inside loops, for example, can be pretty short (e.g. `for (int i = 0; i < 10; i++)`), while "for each" loops can be a bit more verbose (e.g. `for (std::string item : items)`). What matters is to be clear and concise. Common abbreviations like "curItem" instead of "currentItem", or "srcFolder" instead of "sourceFolder" are allowed, as long as they're discernible enough.
 
 **Keep `&` and `*` glued to the type, not the name**. e.g. `int* a; std::string& b`, not `int *a; std::string &b`.
 
-## Auto keyword
+**Class member variables should always contain a suffixed underline (`_`)**. e.g. `std::string name_; uint256_t value_;`. The reason is to avoid hard-to-detect cases like variable shadowing (SanitizerAddress).
 
-**DO NOT use "auto" as a type unless you have no other way out** (e.g. the line gets too big).
-
-If you need to, do it but *please* leave a comment above it so the real type is known.
+**The `auto` type can be used liberally** - usually it is recommended to be verbose with variable types, but sometimes a line of code may get too big, or linting/static code analysis tells you it's a better idea to use it to reduce type repetition for easier readability.
 
 ## Comments
 
@@ -98,13 +100,13 @@ Don't forget to **follow line width and indentation**. Both single-line and mult
 
 **Don't be afraid to express yourself**. No one will ban you for saying bad words, jsut don't overdo it. Sometimes coding is a PITA and we just *have* to emphasize the A with some other flavors of swearing on top. It helps with catharsis.
 
-When commenting documentation for Doxygen, use its [commenting style](https://www.doxygen.nl/manual/docblocks.html).
+[When writing comments for Doxygen docs](https://www.doxygen.nl/manual/docblocks.html), we recommend using Javadoc-style for multi-line (e.g. `/** This is a comment */`) and C++-style for single lines (e.g. `/// This is a comment` or `///< This is an inline comment`). Please do **not** use those types of comments on source implementation (e.g. inside functions on `.c` files - those should be only `//`, not `///`, otherwise implementation details not really meant for end-users will be included during Doxygen's' generation step).
 
 ## File organization
 
-**Code should be split into headers and sources (`.h/.cpp`)**. One header can have several sources if required, for ease of code organizing.
+**Code should be split into headers and sources (`.h/.cpp`)**. One header can have several sources if required, for ease of code organizing. We recommend using `.h` as most of the project uses this extenstion for C++ headers, but `.hpp` can be used as well.
 
-**Sources should NOT have includes other than their respective headers**. Headers should concentrate all required includes for sources to compile.
+**Sources should usually not have includes other than their respective headers, unless actually required for some reason**. Headers should concentrate all required includes for sources to compile.
 
 **Always use include guards for every header**, based on the file's name, like this:
 
@@ -119,7 +121,7 @@ When commenting documentation for Doxygen, use its [commenting style](https://ww
 
 ## Code organization
 
-Headers should be coded in this order, top-down, inside the include guards:
+Headers should ideally group their contents in this order, top-down, inside the include guards:
 
 * Includes
 * Aliases made with `using`
@@ -133,15 +135,17 @@ Headers should be coded in this order, top-down, inside the include guards:
 
 ## Includes
 
-Includes in headers should be organized in "blocks", where each block is in **alphabetical order**. For (Neo)Vim users, you can sort a selection with `SHIFT+V` and the command `:sort`.
-
-Blocks are divided by spaces and should be in this order, top-down:
+Includes in headers should be organized in "blocks", where each block is in **alphabetical order**, top-down:
 
 * **C++ STD** includes (e.g. `#include <string>`)
 * **External** includes (e.g. Boost, OpenSSL, Ethash, etc. - you can further separate those with spaces as well),
 * **Local file** includes (e.g. `#include "../include.h"`)
 
-**The exception to this is if some files have to be included in some other specific order**. For example, somehow a header has to be included before all the others, otherwise it won't compile. If that happens, please leave a comment beside it so no one messes that up.
+**The exception is if some files have to be included in a different, specific order, otherwise the project won't compile**. If that happens, please leave a comment beside it so no one messes that up.
+
+### Vim/Neovim
+
+You can sort a selection with `SHIFT+V` and the command `:sort`.
 
 ## Struct and Class definitions
 
@@ -161,8 +165,8 @@ For each one of those scopes, this order should be followed top-down:
 
 **Keep items inside parenthesis separated, with no extra spaces on the sides**. Do `(this, andthis)`, not `( this,andthis )`.
 
-**Try to not leave trailing whitespaces**. For (Neo)Vim users you can set this custom command: `:command ClearTrailing %s/\s\+$//e`, and run it while editing: `:ClearTrailing` (this is a lifesaver, trust me).
+**Try to not leave trailing whitespaces**. (Neo)Vim users can set this custom command: `:command ClearTrailing %s/\s\+$//e`, and run it while editing: `:ClearTrailing` (this is a lifesaver, trust me).
 
-**`i++` is preferred over `++i`**, unless the logic requires it for some reason.
+**`i++` is preferred over `++i` by default**, unless the logic requires it for some reason.
 
 **Use `nullptr` for pointers, `NULL` for everything else**.

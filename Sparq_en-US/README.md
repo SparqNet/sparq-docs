@@ -2,7 +2,7 @@
 
 This folder contains an introduction to the concepts of the Sparq network, from the most basic to the most detailed.
 
-*This is a living repository* - docs for fixed versions are tagged accordingly on the `main` branch, while the `development` branch is always keeping up with changes made in the project's own development branch. Always check the branch and tag you're in.
+*This is a living repository* - docs for fixed versions are tagged accordingly on the `main` branch, while the `development` branch is always keeping up with changes made in the project's own development branch (including subsequent branches made from it). Always check the branch and tag you're in.
 
 ## Table of Contents
 
@@ -15,7 +15,8 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 **2 - OrbiterSDK**
 * [2.1 - Code structure and overview](ch2/2-1.md)
     * [2.1.1 - The utils folder](ch2/2-1-1.md)
-    * [2.1.2 - The core folder](ch2/2-1-2.md)
+    * [2.1.2 - The contract folder](ch2/2-1-2.md)
+    * [2.1.3 - The core folder](ch2/2-1-3.md)
 * [2.2 - Implementation details](ch2/2-2.md)
     * [2.2.1 - Transactions and Blocks](ch2/2-2-1.md)
     * [2.2.2 - Database structure and manipulation](ch2/2-2-2.md)
@@ -28,7 +29,11 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [3.2 - Contract rules overview](ch3/3-2.md)
 * [3.3 - Setting up the development environment](ch3/3-3.md)
 * [3.4 - Creating a Dynamic Contract (Simple)](ch3/3-4.md)
+    * [3.4.1 - Simple Contract Header](ch3/3-4-1.md)
+    * [3.4.2 - Simple Contract Source](ch3/3-4-2.md)
+    * [3.4.3 - Deploying and Testing](ch3/3-4-3.md)
 * [3.5 - Creating a Dynamic Contract (Advanced)](ch3/3-5.md)
 * [3.6 - Creating a Protocol Contract (Advanced)](ch3/3-6.md)
 * [3.7 - Solidity ABI](ch3/3-7.md)
 * [3.8 - Contract Tester](ch3/3-8.md)
+
