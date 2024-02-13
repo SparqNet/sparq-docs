@@ -36,4 +36,3 @@ This folder contains an introduction to the concepts of the Sparq network, from 
 * [3.6 - Creating a Protocol Contract (Advanced)](ch3/3-6.md)
 * [3.7 - Solidity ABI](ch3/3-7.md)
 * [3.8 - Contract Tester](ch3/3-8.md)
-
